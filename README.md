@@ -1,1 +1,1 @@
-# claude-global-config
+# Claude global config
