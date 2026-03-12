@@ -34,7 +34,7 @@ Projects follow SOLID principles and DDD. Typical layers and their rules:
 
 **`infrastructure/`** — concrete adapters implementing domain ports. One subfolder per external system or data source. Adding a new adapter must not require changes to `domain/`.
 
-**`server/`** — application services shared across applications (composition helpers, read models, WebSocket broadcasting, etc.). No business logic here.
+**`services/`** — application services shared across applications (read models, query helpers, ZIP streaming, resolver factories, etc.). No business logic here. Usable from both CLI and web applications.
 
 **`applications/`** — entry points that consume the shared domain. Multiple applications can coexist (e.g. a web server and a CLI) and all share the same `domain/`, `infrastructure/`, and `server/` layers. Each sub-folder is one deployable application:
 - `applications/cli/` — command-line interface; thin wrappers that parse arguments and delegate to domain/server functions
@@ -43,6 +43,55 @@ Projects follow SOLID principles and DDD. Typical layers and their rules:
 No business logic belongs in `applications/`. The domain must be usable independently of which application runs it.
 
 **Key rule:** if a piece of logic could belong to two layers, prefer the innermost (closest to domain). Move outward only when the dependency on an external concern is unavoidable.
+
+## Versioning and changelog
+
+Projects use **Semantic Versioning** (semver: `MAJOR.MINOR.PATCH`) and maintain a `CHANGELOG.md` following the [Keep a Changelog](https://keepachangelog.com/) format.
+
+### CHANGELOG.md structure
+
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+```
+
+### Rules
+
+- Always maintain an `[Unreleased]` section at the top — accumulate changes there during development
+- When the user asks to release a version:
+  1. Determine the version bump: `MAJOR` (breaking change), `MINOR` (new feature, backward-compatible), `PATCH` (bug fix)
+  2. Rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (ISO 8601 date)
+  3. Add a fresh empty `[Unreleased]` section above it
+  4. Add comparison links at the bottom of the file (e.g. `[1.2.0]: https://github.com/org/repo/compare/v1.1.0...v1.2.0`)
+  5. Update the version in `package.json` (if applicable)
+  6. Commit with message: `chore: release vX.Y.Z`
+  7. Create an annotated git tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`
+  8. **Do not push the tag** unless the user explicitly asks
+- Empty subsections (`### Added`, `### Fixed`, etc.) must be removed before releasing
+- Use past tense, imperative mood in entries: "Add X", "Fix Y", "Remove Z"
+- Each entry should describe the *what* and *why* for the user, not the implementation detail
+- Never edit released sections (only `[Unreleased]` is mutable)
+
+### When to update CHANGELOG.md
+
+Update `[Unreleased]` alongside every code change — do not batch it at release time:
+- New feature or behaviour → `### Added` or `### Changed`
+- Bug fix → `### Fixed`
+- Breaking change → `### Changed` or `### Removed`, and note in commit/task that MAJOR bump is required
+- Security fix → `### Security`
 
 ## Task workflow
 
@@ -55,6 +104,6 @@ Conventions:
 - Files named `NNN-slug.md` (3 digits, e.g. `001-config.md`)
 - Content written in English
 - Move file to `InProgress/` when starting work
-- Only move to `Done/` when explicitly asked by the user
+- Only move to `Done/` when explicitly asked by the user — never declare a task "done" or "complete" verbally either; that decision belongs to the user
 - Each task must include automated tests
 - Update `CLAUDE.md` with any relevant architectural change
