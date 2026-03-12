@@ -6,6 +6,7 @@
 - Keep task files up to date when requirements evolve
 - Document all architectural decisions, subtleties, and constraints in CLAUDE.md (not only in personal memory) — this must be done during each task
 File naming and separation rules (see above) apply to every new file created, without exception — never group multiple exported functions or classes in one file
+- Document the functional changes. Create dedicated documentation linked in the README.md if necessary.
 
 ## Task workflow
 
