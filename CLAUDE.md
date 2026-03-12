@@ -87,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### When to update CHANGELOG.md
 
-Update `[Unreleased]` alongside every code change — do not batch it at release time:
+Update `[Unreleased]` alongside every code change — include it in the **same commit**, do not batch it at release time:
 - New feature or behaviour → `### Added` or `### Changed`
 - Bug fix → `### Fixed`
 - Breaking change → `### Changed` or `### Removed`, and note in commit/task that MAJOR bump is required
