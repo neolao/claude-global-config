@@ -73,13 +73,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Always maintain an `[Unreleased]` section at the top — accumulate changes there during development
 - When the user asks to release a version:
   1. Determine the version bump: `MAJOR` (breaking change), `MINOR` (new feature, backward-compatible), `PATCH` (bug fix)
-  2. Rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (ISO 8601 date)
-  3. Add a fresh empty `[Unreleased]` section above it
-  4. Add comparison links at the bottom of the file (e.g. `[1.2.0]: https://github.com/org/repo/compare/v1.1.0...v1.2.0`)
-  5. Update the version in `package.json` (if applicable)
-  6. Commit with message: `chore: release vX.Y.Z`
-  7. Create an annotated git tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`
-  8. **Do not push the tag** unless the user explicitly asks
+  2. **Before doing anything**, present to the user: the proposed version number, the bump type and its justification, and the full list of changes from `[Unreleased]` — then wait for explicit confirmation
+  3. Rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (ISO 8601 date)
+  4. Add a fresh empty `[Unreleased]` section above it
+  5. Add comparison links at the bottom of the file (e.g. `[1.2.0]: https://github.com/org/repo/compare/v1.1.0...v1.2.0`)
+  6. Update the version in `package.json` (if applicable)
+  7. Commit with message: `chore: release vX.Y.Z`
+  8. Create an annotated git tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`
+  9. **Do not push the tag** unless the user explicitly asks
 - Empty subsections (`### Added`, `### Fixed`, etc.) must be removed before releasing
 - Use past tense, imperative mood in entries: "Add X", "Fix Y", "Remove Z"
 - Each entry should describe the *what* and *why* for the user, not the implementation detail
