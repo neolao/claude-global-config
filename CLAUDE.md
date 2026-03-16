@@ -2,6 +2,7 @@
 
 ## Project documentation
 - The entry point is README.md, keep this file relatively small
+- **README.md must always be written in English** — no exceptions, regardless of the project's spoken language
 - Organize the README.md in sections, like
   - Ubiquitous Language
   - Projet setup: how to setup the project
