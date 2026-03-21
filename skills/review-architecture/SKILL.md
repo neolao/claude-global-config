@@ -58,6 +58,8 @@ Patterns to look for:
 - **Magic numbers** with no named constant (e.g. page sizes, limits, timeouts inline in logic)
 - **Duplicated literals** — the same string appearing in multiple files signals missing centralisation
 
+**Important exception — source adapters**: In this project, each `infrastructure/{source}/` adapter is a self-contained implementation for one specific external source. Hardcoded constants inside an adapter (base URLs, thresholds, regex, browser launch args, image size filters, etc.) are **intentional and acceptable** — each source has distinct, non-generalizable behaviour. Do **not** flag per-source constants as violations. Only flag values that are duplicated *across* adapters or that belong in cross-cutting domain/config layers.
+
 ## Report format
 
 Each observation must be assigned a unique number across the entire report (F-1, F-2, F-3, …) so the user can reference any finding by number.
