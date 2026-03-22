@@ -13,6 +13,9 @@
   - Dev tools
 - Create a dedicated page linked from README.md if necessary
 
+## Language rules
+- **CLAUDE.md files and skills must always be written in English** — no exceptions, regardless of the project's spoken language or the user's language
+
 ## Development rules
 - Always run the full test suite and build after any code change (`npm test && npm run build`)
 - Add tests for every new feature or behaviour change
