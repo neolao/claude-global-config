@@ -120,3 +120,7 @@ Each observation must be assigned a unique number across the entire report (A-1,
 
 Be precise, cite the files and lines concerned. Avoid generalities.
 Each finding in "Priority improvements" must reference its A-number so the user can say "fix A-3" to act on a specific point.
+
+## Output
+
+Once the report is complete, display it in the conversation, then ask the user if they want it saved to a file. If they confirm, save it to a file named `yyyy-mm-dd_hh-mm-ss_review-architecture.md` (using the current date and time) in a `reports/` directory at the root of the current working directory (create it if it does not exist).

@@ -155,3 +155,7 @@ Each finding must have a unique number (S-1, S-2, …) so the user can reference
 ```
 
 Be precise. Every finding must include a file path and line number. Avoid theoretical observations with no concrete exploit path — if you cannot show how it is exploitable, mark it INFO.
+
+## Output
+
+Once the report is complete, display it in the conversation, then ask the user if they want it saved to a file. If they confirm, save it to a file named `yyyy-mm-dd_hh-mm-ss_review-web-security.md` (using the current date and time) in a `reports/` directory at the root of the current working directory (create it if it does not exist).
