@@ -62,7 +62,7 @@ Patterns to look for:
 
 ## Report format
 
-Each observation must be assigned a unique number across the entire report (F-1, F-2, F-3, …) so the user can reference any finding by number.
+Each observation must be assigned a unique number across the entire report (A-1, A-2, A-3, …) so the user can reference any finding by number.
 
 ```
 # Architecture Report
@@ -73,50 +73,50 @@ Each observation must be assigned a unique number across the entire report (F-1,
 ## SOLID
 
 ### S — Single Responsibility: ✅/⚠️/❌
-- F-1: [Observation + file:line]
-- F-2: [Observation + file:line]
+- A-1: [Observation + file:line]
+- A-2: [Observation + file:line]
 
 ### O — Open/Closed: ✅/⚠️/❌
-- F-3: [Observation + file:line]
+- A-3: [Observation + file:line]
 
 ### L — Liskov Substitution: ✅/⚠️/❌
-- F-4: [Observation + file:line]
+- A-4: [Observation + file:line]
 
 ### I — Interface Segregation: ✅/⚠️/❌
-- F-5: [Observation + file:line]
+- A-5: [Observation + file:line]
 
 ### D — Dependency Inversion: ✅/⚠️/❌
-- F-6: [Observation + file:line]
+- A-6: [Observation + file:line]
 
 ## DDD
 
 ### Domain isolation: ✅/⚠️/❌
-- F-7: [Observation + file:line]
+- A-7: [Observation + file:line]
 
 ### Ports & Adapters: ✅/⚠️/❌
-- F-8: [Observation + file:line]
+- A-8: [Observation + file:line]
 
 ### Value Objects: ✅/⚠️/❌
-- F-9: [Observation + file:line]
+- A-9: [Observation + file:line]
 
 ### Ubiquitous Language: ✅/⚠️/❌
-- F-10: [Observation + file:line]
+- A-10: [Observation + file:line]
 
 ### Hexagonal Architecture: ✅/⚠️/❌
-- F-11: [Observation + file:line]
+- A-11: [Observation + file:line]
 
 ## Conventions
-- F-12: [Observation + file:line]
+- A-12: [Observation + file:line]
 
 ## Hardcoded values
-- F-13: [Observation + file:line — what is hardcoded, where it should live instead]
+- A-13: [Observation + file:line — what is hardcoded, where it should live instead]
 
 ## Priority improvements
 
-1. F-X: [Most important — one line]
-2. F-Y: [Second most important — one line]
+1. A-X: [Most important — one line]
+2. A-Y: [Second most important — one line]
 ...
 ```
 
 Be precise, cite the files and lines concerned. Avoid generalities.
-Each finding in "Priority improvements" must reference its F-number so the user can say "fix F-3" to act on a specific point.
+Each finding in "Priority improvements" must reference its A-number so the user can say "fix A-3" to act on a specific point.
