@@ -16,6 +16,10 @@
 ## Language rules
 - **CLAUDE.md files and skills must always be written in English** — no exceptions, regardless of the project's spoken language or the user's language
 
+## Web application architecture
+
+- **No SPA / client-side navigation** — never propose or enable SPA behavior (React Router, SvelteKit CSR, Next.js client navigation, etc.) unless the user explicitly requests it. It adds complexity, creates subtle bugs (e.g. framework-internal JSON requests polluting HTTP caches), and is overkill for most apps. Prefer full-page reloads via plain `<a>` links. In SvelteKit, enforce this with `export const csr = false` in the root `+layout.ts`.
+
 ## Development rules
 - Always run the full test suite and build after any code change (`npm test && npm run build`)
 - Add tests for every new feature or behaviour change
