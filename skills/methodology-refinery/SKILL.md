@@ -68,7 +68,7 @@ After every exchange (one user message + your response), append both turns to `<
 ```
 
 Rules:
-- Time is local time, 24-hour clock, format `HH:MM`.
+- Time is local time, 24-hour clock, format `HH:MM`. **Always run `date +%H:%M` via Bash before writing a log entry** to get the real system time. Never invent or guess the time.
 - The date in the filename is the date the session started (do not roll over to the next day mid-session).
 - If the file does not exist yet, create it with a top-level heading first: `# YYYY-MM-DD`
 - Append only — never rewrite or delete existing log content.
