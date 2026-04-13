@@ -29,6 +29,7 @@
 - Document functional changes in `README.md` in the **same commit** as the code — never after the fact. Concretely: new CLI command → add usage + examples; new source adapter → add row in sources table; new file format → document the full format with an example; changed output format or behaviour → update all affected descriptions and examples.
 - After every task or significant change, proactively update CLAUDE.md and personal memory (MEMORY.md) if any information is now outdated or missing — without waiting for the user to ask
 - Update the Ubiquitous Language when a new domain term is introduced. Ask the user more precisions if necessary.
+- **Keep CLAUDE.md lean**: when a section grows beyond ~20 lines of detail, extract it to a dedicated `docs/<topic>.md` file and replace the section with a one-line link + a 2–3 line summary of the critical facts that must stay in context. Do this proactively, without waiting for the user to ask.
 
 ## Layer responsibilities
 
