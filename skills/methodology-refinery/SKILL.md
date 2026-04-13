@@ -24,6 +24,7 @@ Wait for the user's answer before doing anything else.
 <repo-root>/
   <subject-name>/          ← one directory per reflection subject
     README.md              ← brief description of the subject (create if absent)
+    SUMMARY.md             ← rolling summary of all discussions (max 100 lines)
     logs/
       YYYY-MM-DD.md        ← one log file per day
 ```
@@ -35,8 +36,22 @@ Subjects are plain directories at the root of the repository. Every subject that
 Once the active subject is known:
 
 1. Read `<subject>/README.md` to load the subject brief.
-2. Read the most recent log file(s) in `<subject>/logs/` — at minimum the current day's log if it exists, and the previous session's log if today's is absent or very short.
-3. If the subject does not exist yet, create it (see "New subjects" below) before proceeding.
+2. Read `<subject>/SUMMARY.md` if it exists — this gives a condensed history of all past discussions.
+3. Read the most recent log file(s) in `<subject>/logs/` — at minimum the current day's log if it exists, and the previous session's log if today's is absent or very short.
+4. If the subject does not exist yet, create it (see "New subjects" below) before proceeding.
+
+## During conversation — maintain SUMMARY.md
+
+After every exchange, update `<subject>/SUMMARY.md` to incorporate the new information from the current turn.
+
+Rules:
+- Organise content thematically, not chronologically — merge related points together.
+- Keep the file **strictly under 100 lines** at all times.
+- If adding new content would push the file past 100 lines, **re-summarise the existing content first**: compress older entries, merge redundant points, and keep only what remains meaningful, then add the new content.
+- Do not copy verbatim exchanges — synthesise ideas, insights, decisions, and recurring themes.
+- The file is always a living summary, never an append-only record.
+
+Adapt the headings to what is actually relevant for the subject. Keep sections concise.
 
 ## During conversation — write logs
 
@@ -98,8 +113,18 @@ When the user wants to start a new subject that does not yet exist:
 <One or two sentences — ask the user or draft from first message and confirm.>
 ```
 
-3. Create `<subject-name>/logs/` (add `.gitkeep` if needed to make it trackable in git).
-4. Proceed with the normal session flow.
+3. Create `<subject-name>/SUMMARY.md` with initial content derived from the first message:
+
+```markdown
+# Résumé — <Subject Name>
+
+## Thèmes principaux
+
+- <draft from first message>
+```
+
+4. Create `<subject-name>/logs/` (add `.gitkeep` if needed to make it trackable in git).
+5. Proceed with the normal session flow.
 
 ## Navigation and recall
 
@@ -117,3 +142,4 @@ If the user shifts to a different subject mid-session, start writing to the new 
 - Do not summarise or rewrite past log entries — they are an immutable record.
 - Do not rename subjects or log files.
 - Do not add YAML frontmatter to log files.
+- Do not let `SUMMARY.md` exceed 100 lines — re-summarise proactively before that limit is reached.
