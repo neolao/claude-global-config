@@ -1,15 +1,18 @@
 {
+  "env": {},
   "permissions": {
     "allow": [
       "Bash(*)"
     ]
   },
+  "hooks": {},
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true
   },
   "language": "French",
-  "autoUpdatesChannel": "stable",
-  "env": {
-    "DISABLE_AUTOUPDATER": "1"
-  }
+  "autoUpdatesChannel": "latest",
+  "tui": "default",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-daltonized",
+  "effortLevel": "high"
 }
