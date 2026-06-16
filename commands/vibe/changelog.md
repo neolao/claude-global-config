@@ -5,42 +5,7 @@ argument-hint: [optional: version number to release, e.g. 1.2.0]
 
 # /vibe:changelog — CHANGELOG.md Updater
 
-Update `CHANGELOG.md` following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and [Semantic Versioning](https://semver.org/).
-
-## Keep a Changelog format reference
-
-```markdown
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-## [1.2.0] - 2026-06-16
-### Added
-- New feature X
-
-### Fixed
-- Bug Y now handled correctly
-
-## [1.1.0] - 2026-05-01
-...
-
-[Unreleased]: https://github.com/user/repo/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/user/repo/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/user/repo/releases/tag/v1.1.0
-```
-
-Change type categories (use only what applies):
-- **Added** — new features
-- **Changed** — changes to existing functionality
-- **Deprecated** — features that will be removed in a future release
-- **Removed** — features removed in this release
-- **Fixed** — bug fixes
-- **Security** — vulnerability fixes
+Update `CHANGELOG.md` following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
 ## Step 1 — Read current state
 

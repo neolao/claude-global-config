@@ -12,23 +12,16 @@ Run a structured code quality review by invoking the specialized agents declared
 Read `CLAUDE.md` and find the `## Review agents` section.
 It lists which agents are active for this project and their scope.
 
-If the section is absent: run all available agents except `review-ddd` (which requires explicit opt-in).
+If the section is absent: run `review-coverage`, `review-naming`, `review-complexity`; add `review-solid` only if the codebase contains classes or interfaces; skip `review-ddd` (explicit opt-in required).
 
-## Step 2 — Determine scope
+## Step 2 — Determine scope and collect files
 
-If `$ARGUMENTS` is provided: review only the specified path or file.
-If no argument: review the full codebase (excluding `node_modules`, `dist`, `build`, `.git`, migration files, generated files).
+- If `$ARGUMENTS` is provided: review only the specified path or file.
+- If no argument: review the full codebase.
 
-## Step 3 — Collect files
+Exclude: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `target/`, generated files (`// generated`, `# auto-generated`), `*.config.*`, `*.json` (unless it contains logic), migration files.
 
-Gather all source files in scope. Exclude:
-- Dependency directories (`node_modules/`, `vendor/`, `.venv/`)
-- Build output (`dist/`, `build/`, `out/`, `target/`)
-- Generated files (marked with `// generated`, `# auto-generated`, etc.)
-- Configuration files (`*.config.*`, `*.json` unless it contains logic)
-- Migration files
-
-## Step 4 — Run active agents in order
+## Step 3 — Run active agents in order
 
 Invoke each active agent in this order, passing the collected files:
 
@@ -40,26 +33,28 @@ Invoke each active agent in this order, passing the collected files:
 
 Collect all findings from each agent.
 
-## Step 5 — Deduplicate and prioritize
+## Step 4 — Deduplicate and prioritize
 
-Before reporting:
 - Merge findings that point to the same issue from different angles
-- Assign priority to each finding:
+- Assign priority:
   - **High** — affects correctness, testability, or maintainability significantly
   - **Medium** — reduces readability or violates a clear principle
   - **Low** — style preference or minor improvement
 
-## Step 6 — Apply fixes (if findings are High priority)
+## Step 5 — Apply fixes
 
-For High priority findings only:
-1. Apply the fix directly
+Apply High and Medium priority fixes directly — this is vibe coding: the user does not fix code manually.
+
+For each fix:
+1. Apply it
 2. Run the test command (from manifest) to confirm nothing broke
 3. Run the lint command (from manifest)
-4. If tests break after a refactor: revert that specific fix and flag it for manual review instead
+4. If tests break: revert, diagnose, try an alternative approach — repeat up to 3 times
+5. If still failing after 3 attempts: skip that fix and escalate to the user with a precise diagnosis
 
-Do NOT auto-fix Medium or Low findings — report them only.
+Do NOT auto-fix Low findings — report them only.
 
-## Step 7 — Report to user
+## Step 6 — Report to user
 
 Structure the report as follows:
 
@@ -70,17 +65,17 @@ Agents run: [list]
 Files reviewed: N
 Total findings: N (High: N, Medium: N, Low: N)
 
-## Applied fixes (High priority)
+## Applied fixes (High + Medium)
 [list of what was changed, with file + one-line description]
 [or "None" if nothing was auto-fixed]
 
 ## Remaining findings
 
 ### High
-[list — these were not auto-fixable and need attention]
+[list — auto-fix failed after 3 attempts; includes diagnosis]
 
 ### Medium
-[list]
+[list — auto-fix failed after 3 attempts; includes diagnosis]
 
 ### Low
 [list — address when convenient]

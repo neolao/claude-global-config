@@ -9,75 +9,41 @@ You are about to initialize or fully regenerate this project's `CLAUDE.md` to su
 
 ## Step 1 — Project reconnaissance
 
-Silently detect the stack by scanning for manifest and config files. Check all of the following — a project may use more than one language:
+Scan for manifest files — a project may use more than one stack:
 
-| File found | Stack |
-|---|---|
-| `package.json` | Node.js / JavaScript / TypeScript |
-| `pyproject.toml` / `setup.py` / `requirements.txt` | Python |
-| `Cargo.toml` | Rust |
-| `go.mod` | Go |
-| `pom.xml` / `build.gradle` | Java / Kotlin |
-| `composer.json` | PHP |
-| `Gemfile` | Ruby |
-| `*.csproj` / `*.sln` | .NET / C# |
-| `Makefile` | any — check its targets for test/lint/build commands |
+| Stack | Manifest | Test framework | Style tooling |
+|---|---|---|---|
+| Node.js / TS | `package.json` | jest/vitest/mocha/tap/ava; `*.test.*`/`*.spec.*` | `@biomejs/biome`; or eslint + prettier |
+| Python | `pyproject.toml`/`setup.py`/`requirements.txt` | pytest/unittest; `test_*.py` | `[tool.ruff]`/`ruff.toml`; or `[tool.black]` |
+| Rust | `Cargo.toml` | built-in `cargo test` | built-in `rustfmt` |
+| Go | `go.mod` | built-in `go test` | built-in `gofmt`/`goimports` |
+| Java / Kotlin | `pom.xml`/`build.gradle` | junit/testng | checkstyle/spotless |
+| PHP | `composer.json` | phpunit | php-cs-fixer/phpcs |
+| Ruby | `Gemfile` | rspec/minitest | rubocop |
+| .NET / C# | `*.csproj`/`*.sln` | xunit/nunit/mstest | built-in `dotnet format` |
+| any | `Makefile` | check targets | check targets |
 
 For each detected stack, read the manifest to extract:
 - Project name and description
-- Existing scripts / tasks for: test, lint, format, build, dev/run
-- Declared dependencies (to identify test framework and style tooling already in use)
+- Existing scripts for: test, lint, format, build, dev/run
+- Declared dependencies
 
 Also collect:
 - Top-level directory structure (infer architecture)
-- Existing `CLAUDE.md` — if present, read it and **preserve any section marked `<!-- keep -->`**
-- `.env.example` or `.env` (to understand environment shape)
-- CI config files (`.github/workflows/`, `Makefile`, etc.)
+- Existing `CLAUDE.md` — preserve sections marked `<!-- keep -->`
+- `.env.example` or `.env`
+- CI config files (`.github/workflows/`, etc.)
 - `$ARGUMENTS` if provided — treat as additional project description
 
 ## Step 2 — Identify gaps
 
-For each detected stack, determine what is missing:
+From the table above, flag any missing test framework or style tooling → install in Step 3.
 
-### Test framework detection
+Determine review agents to activate in CLAUDE.md:
 
-| Stack | Look for |
-|---|---|
-| Node.js / TS | `jest`, `vitest`, `mocha`, `tap`, `ava` in dependencies; `*.test.*` or `*.spec.*` files |
-| Python | `pytest`, `unittest` in dependencies; `test_*.py` files |
-| Rust | built-in `cargo test` — always available, no install needed |
-| Go | built-in `go test` — always available, no install needed |
-| Java | `junit`, `testng` in pom.xml / build.gradle |
-| Ruby | `rspec`, `minitest` in Gemfile |
-| .NET | `xunit`, `nunit`, `mstest` in .csproj |
-| PHP | `phpunit` in composer.json |
-
-→ If no test framework found: flag as missing, install in Step 3.
-
-### Style tooling detection
-
-| Stack | Look for |
-|---|---|
-| Node.js / TS | `biome.json`, `@biomejs/biome`; or `eslint.config.*` / `.eslintrc*` + `.prettierrc*` |
-| Python | `[tool.ruff]` in pyproject.toml, `ruff.toml`; or `[tool.black]` |
-| Rust | built-in `rustfmt` — always available |
-| Go | built-in `gofmt` / `goimports` — always available |
-| Java | `checkstyle`, `spotless` in build config |
-| Ruby | `rubocop` in Gemfile |
-| .NET | `dotnet format` — built-in since .NET 6 |
-| PHP | `php-cs-fixer` or `phpcs` in composer.json |
-
-→ If no style tooling found: flag as missing, install in Step 3.
-
-### Review agents detection
-
-Determine which review agents to activate in the generated CLAUDE.md:
-
-- `review-coverage`: always active
-- `review-naming`: always active
-- `review-complexity`: always active
-- `review-solid`: activate if the project uses classes, interfaces, or a clearly modular architecture; skip for pure scripts or simple functional code
-- `review-ddd`: activate if the project has an explicit domain layer (directories named `domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary in the codebase); skip otherwise
+- `review-coverage`, `review-naming`, `review-complexity`: always active
+- `review-solid`: activate if the project uses classes, interfaces, or a modular architecture; skip for scripts or functional code
+- `review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
 
 ## Step 3 — Install missing tooling
 
