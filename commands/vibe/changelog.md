@@ -1,0 +1,104 @@
+---
+description: Update CHANGELOG.md (Keep a Changelog format) from git history since last tag
+argument-hint: [optional: version number to release, e.g. 1.2.0]
+---
+
+# /vibe:changelog — CHANGELOG.md Updater
+
+Update `CHANGELOG.md` following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and [Semantic Versioning](https://semver.org/).
+
+## Keep a Changelog format reference
+
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [1.2.0] - 2026-06-16
+### Added
+- New feature X
+
+### Fixed
+- Bug Y now handled correctly
+
+## [1.1.0] - 2026-05-01
+...
+
+[Unreleased]: https://github.com/user/repo/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/user/repo/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/user/repo/releases/tag/v1.1.0
+```
+
+Change type categories (use only what applies):
+- **Added** — new features
+- **Changed** — changes to existing functionality
+- **Deprecated** — features that will be removed in a future release
+- **Removed** — features removed in this release
+- **Fixed** — bug fixes
+- **Security** — vulnerability fixes
+
+## Step 1 — Read current state
+
+- Read `CHANGELOG.md` if it exists (note current [Unreleased] entries and latest version)
+- Run `git tag --sort=-version:refname | head -5` to find recent tags
+- Run `git log [LAST_TAG]..HEAD --oneline --no-merges` to get commits since last tag
+- If no tags exist: run `git log --oneline --no-merges` for all commits
+- Detect repo remote URL: `git remote get-url origin` (needed for compare links)
+
+## Step 2 — Classify commits
+
+Map each commit message to a change category. Use these heuristics:
+
+| Commit pattern | Category |
+|---|---|
+| `feat:`, `add`, `new`, `implement` | Added |
+| `refactor:`, `update`, `change`, `improve`, `migrate` | Changed |
+| `deprecate` | Deprecated |
+| `remove`, `drop`, `delete` | Removed |
+| `fix:`, `bug`, `patch`, `correct`, `repair` | Fixed |
+| `security`, `vuln`, `cve`, `auth` | Security |
+
+- Rewrite each commit as a human-readable changelog entry (not a raw commit message)
+- Group entries by category
+- Discard noise: merge commits, version bumps, `chore: lint`, `chore: deps` unless significant
+- If a commit message is ambiguous, use judgment — prefer the user-facing impact
+
+## Step 3 — Determine target version
+
+If `$ARGUMENTS` contains a version number (e.g. `1.2.0`): use it as the release version.
+
+If no argument provided:
+- Keep all classified entries under `[Unreleased]`
+- Do NOT invent or bump a version number
+
+## Step 4 — Update CHANGELOG.md
+
+### If releasing (version provided in $ARGUMENTS):
+
+1. Replace `## [Unreleased]` with `## [Unreleased]` (empty) + new `## [X.Y.Z] - YYYY-MM-DD` section
+2. Move all pending [Unreleased] entries + newly classified commits into the new version section
+3. Add/update compare links at the bottom of the file
+
+### If not releasing (no version argument):
+
+1. Add newly classified commits to the `## [Unreleased]` section
+2. Do NOT create a new versioned section
+3. Preserve all existing versioned sections intact
+
+### If CHANGELOG.md does not exist:
+
+Create it with the full header, an `[Unreleased]` section, and all classified commits in it.
+
+## Step 5 — Report
+
+Tell the user:
+- How many commits were processed
+- How many were kept vs discarded
+- Which categories were populated
+- Whether a version was released or entries remain under [Unreleased]
+- Do NOT print the full CHANGELOG.md unless asked

@@ -69,6 +69,16 @@ For each detected stack, determine what is missing:
 
 → If no style tooling found: flag as missing, install in Step 3.
 
+### Review agents detection
+
+Determine which review agents to activate in the generated CLAUDE.md:
+
+- `review-coverage`: always active
+- `review-naming`: always active
+- `review-complexity`: always active
+- `review-solid`: activate if the project uses classes, interfaces, or a clearly modular architecture; skip for pure scripts or simple functional code
+- `review-ddd`: activate if the project has an explicit domain layer (directories named `domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary in the codebase); skip otherwise
+
 ## Step 3 — Install missing tooling
 
 Only install what is missing. Prefer the canonical, modern tool for each stack:
@@ -178,6 +188,18 @@ If tests or lint fail:
 - Never hardcode secrets — use environment variables
 - Never skip tests to meet a deadline — fix the code instead
 - Style is enforced by tooling, not by convention — always run the lint command before presenting results
+
+## Review agents
+
+Agents active for `/vibe:review` on this project:
+
+| Agent | Active | Reason |
+|---|---|---|
+| `review-coverage` | ✅ | always active |
+| `review-naming` | ✅ | always active |
+| `review-complexity` | ✅ | always active |
+| `review-solid` | [✅ / ❌] | [active if OO or modular architecture detected / inactive: functional or scripting style] |
+| `review-ddd` | [✅ / ❌] | [active if domain layer detected / inactive: no explicit domain model] |
 ```
 
 ---
