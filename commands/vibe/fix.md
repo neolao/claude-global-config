@@ -30,7 +30,19 @@ Do not proceed with the fix until terminology is aligned.
 
 If the bug description is too vague to reproduce deterministically, ask ONE clarifying question before proceeding.
 
-## Step 2 — Reproduce in a test first (red)
+## Step 2 — Plan (must be validated before proceeding)
+
+Present the fix plan to the user and **wait for explicit approval** before writing any code.
+
+The plan must include:
+- **Root cause hypothesis** — what you believe is causing the bug, based on reading the code
+- **Module(s) touched** — which files will be modified
+- **Test strategy** — how the failing test will reproduce the bug
+- **Fix approach** — the minimal change that will make the test pass
+
+Do not write a single line of code until the user approves the plan. If the user requests changes, update and re-present.
+
+## Step 3 — Reproduce in a test first (red)
 
 Before touching any implementation:
 
@@ -45,7 +57,7 @@ Test name must describe the bug scenario:
 - ✅ `"does not crash when input list is empty"`
 - ❌ `"bug fix test"`
 
-## Step 3 — Fix the bug (green)
+## Step 4 — Fix the bug (green)
 
 Write the minimum change to make the failing test pass without breaking existing tests.
 
@@ -59,14 +71,14 @@ If tests fail after the fix:
 - Re-run the full test suite
 - Repeat up to 3 times before escalating to the user with a precise diagnosis
 
-## Step 4 — Clean up
+## Step 5 — Clean up
 
 With all tests green:
 - Remove any debug artifacts introduced during investigation (console.log, print, dbg!, etc.)
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green
 
-## Step 5 — Update CHANGELOG.md
+## Step 6 — Update CHANGELOG.md
 
 Add an entry under `## [Unreleased]` > `### Fixed`:
 
@@ -80,13 +92,13 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Fixed` does not exist under [Unreleased], add it
 
-## Step 6 — Sync .vibe/
+## Step 7 — Sync .vibe/
 
 If the `.vibe/` directory exists: run `/vibe:sync` — it will detect changed files via git and update only the affected modules.
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
-## Step 7 — Report to user
+## Step 8 — Report to user
 
 Summarize concisely:
 - Root cause of the bug (1 sentence)

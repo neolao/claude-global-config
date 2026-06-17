@@ -33,7 +33,20 @@ Compare the requested feature against the existing architecture (`.vibe/modules/
 
 If the requirement is ambiguous on a point that would lead to fundamentally different implementations: ask ONE clarifying question.
 
-## Step 2 — Write tests first (red)
+## Step 2 — Plan (must be validated before proceeding)
+
+Present the implementation plan to the user and **wait for explicit approval** before writing any code.
+
+The plan must include:
+- **Approach** — what will be implemented, in 2–3 sentences
+- **Modules touched** — which existing files/modules will be modified, and why
+- **New modules** — if any new file or module needs to be created, justify it
+- **Test strategy** — nominal path, edge cases, error paths planned
+- **Assumptions** — any assumption made due to ambiguity in the requirement
+
+Do not write a single line of code until the user approves the plan. If the user requests changes to the plan, update it and present it again.
+
+## Step 3 — Write tests first (red)
 
 Before writing any implementation:
 
@@ -48,7 +61,7 @@ Test names must describe behavior, not implementation:
 - ✅ `"returns 404 when user does not exist"`
 - ❌ `"test getUserById error case"`
 
-## Step 3 — Implement (green)
+## Step 4 — Implement (green)
 
 Write the minimum implementation to make the tests pass. Do not over-engineer.
 
@@ -62,7 +75,7 @@ If tests fail:
 - Re-run
 - Repeat up to 3 times before escalating to the user with a precise diagnosis
 
-## Step 4 — Refactor (clean)
+## Step 5 — Refactor (clean)
 
 With all tests green:
 - Remove dead code and unused imports
@@ -70,7 +83,7 @@ With all tests green:
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green after lint fixes
 
-## Step 5 — Update CHANGELOG.md
+## Step 6 — Update CHANGELOG.md
 
 Add an entry under `## [Unreleased]` > `### Added`:
 
@@ -84,13 +97,13 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Added` does not exist under [Unreleased], add it
 
-## Step 6 — Sync .vibe/
+## Step 7 — Sync .vibe/
 
 If the `.vibe/` directory exists: run `/vibe:sync` — it will detect changed files via git and update only the affected modules.
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
-## Step 7 — Report to user
+## Step 8 — Report to user
 
 Summarize concisely:
 - What was implemented (1–2 sentences)
