@@ -14,7 +14,10 @@ Read `$ARGUMENTS` carefully. Identify:
 - What is the expected (correct) behavior?
 - Where in the codebase is the issue likely located?
 
-Read relevant source files to locate the root cause before writing any code.
+Read, in order:
+- `.vibe/index.md` if it exists — to identify which module the bug likely belongs to
+- The relevant `.vibe/modules/[name].md` for that area
+- The actual source files to locate the root cause
 
 If the bug description is too vague to reproduce deterministically, ask ONE clarifying question before proceeding.
 

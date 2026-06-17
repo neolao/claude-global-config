@@ -13,6 +13,8 @@ Read `$ARGUMENTS` carefully. If the requirement is ambiguous on a point that wou
 
 Also read:
 - `CLAUDE.md` for project conventions, definition of done, and test location
+- `.vibe/index.md` if it exists — for a quick overview of modules and patterns
+- The relevant `.vibe/modules/[name].md` files for the areas likely involved
 - Relevant existing source files to understand the current architecture
 
 ## Step 2 — Write tests first (red)
