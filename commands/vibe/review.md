@@ -12,7 +12,7 @@ Run a structured code quality review by invoking the specialized agents declared
 Read `CLAUDE.md` and find the `## Review agents` section.
 It lists which agents are active for this project and their scope.
 
-If the section is absent: run `review-coverage`, `review-naming`, `review-complexity`; add `review-solid` only if the codebase contains classes or interfaces; skip `review-ddd` (explicit opt-in required).
+If the section is absent: run `review-coverage`, `review-naming`, `review-complexity`; add `review-solid` only if the codebase contains classes or interfaces; add `review-architecture` only if `.vibe/` exists; skip `review-ddd` (explicit opt-in required).
 
 ## Step 2 — Determine scope and collect files
 
@@ -30,6 +30,7 @@ Invoke each active agent in this order, passing the collected files:
 3. `review-complexity` — complexity hotspots
 4. `review-solid` — SOLID violations (if active)
 5. `review-ddd` — DDD alignment (if active)
+6. `review-architecture` — architectural drift: module boundaries, circular deps, layer violations, decisions violated (if active — requires `.vibe/`)
 
 Collect all findings from each agent.
 
