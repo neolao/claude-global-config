@@ -68,13 +68,9 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Fixed` does not exist under [Unreleased], add it
 
-## Step 6 — Update .vibe/ (if it exists)
+## Step 6 — Sync .vibe/
 
-If the `.vibe/` directory exists at the project root:
-- For each source file created or modified: update the corresponding entry in `.vibe/modules/`
-- If new data models were added: add them to `.vibe/models.md`
-- If new domain terms were introduced: add a minimal entry to `.vibe/glossary.md` (definition left blank for the user to fill)
-- Update `.vibe/index.md` if the fix introduced a new module
+If the `.vibe/` directory exists: run `/vibe:sync` — it will detect changed files via git and update only the affected modules.
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
