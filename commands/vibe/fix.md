@@ -68,7 +68,17 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Fixed` does not exist under [Unreleased], add it
 
-## Step 6 — Report to user
+## Step 6 — Update .vibe/ (if it exists)
+
+If the `.vibe/` directory exists at the project root:
+- For each source file created or modified: update the corresponding entry in `.vibe/modules/`
+- If new data models were added: add them to `.vibe/models.md`
+- If new domain terms were introduced: add a minimal entry to `.vibe/glossary.md` (definition left blank for the user to fill)
+- Update `.vibe/index.md` if the fix introduced a new module
+
+If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
+
+## Step 7 — Report to user
 
 Summarize concisely:
 - Root cause of the bug (1 sentence)

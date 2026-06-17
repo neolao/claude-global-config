@@ -96,6 +96,8 @@ Populate every placeholder with values inferred from the actual project — no g
 └── ...
 ```
 
+> Run `/vibe:sync` to generate `.vibe/` — detailed module map, data models, and ubiquitous language glossary for Claude context.
+
 ## Development workflow (Vibe Coding)
 
 The user is the **Product Owner only**. They describe requirements and evaluate outcomes — they do NOT write or manually test code.
