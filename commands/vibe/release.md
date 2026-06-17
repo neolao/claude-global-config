@@ -28,7 +28,7 @@ Create a versioned release following Semantic Versioning.
 
 ## Step 3 — Finalize CHANGELOG.md
 
-Run `/vibe:changelog [version]` to move [Unreleased] entries into the new version section with today's date.
+**Invoke the `vibe:changelog` skill** using the Skill tool (`skill: "vibe:changelog"`, `args: "[version]"`) — to move [Unreleased] entries into the new version section with today's date.
 
 ## Step 4 — Bump version in manifest
 

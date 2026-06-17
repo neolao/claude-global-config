@@ -94,7 +94,7 @@ Rules:
 
 ## Step 7 — Sync .vibe/
 
-If the `.vibe/` directory exists: run `/vibe:sync` — it will detect changed files via git and update only the affected modules.
+If the `.vibe/` directory exists: **invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — it will detect changed files via git and update only the affected modules.
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
