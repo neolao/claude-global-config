@@ -46,6 +46,16 @@ The plan must include:
 
 Do not write a single line of code until the user approves the plan. If the user requests changes to the plan, update it and present it again.
 
+Once the plan is approved: if it includes a non-obvious design decision (a choice between multiple valid approaches, or a deliberate deviation from existing patterns), record it in `.vibe/decisions.md`:
+
+```markdown
+## [YYYY-MM-DD] [Short title]
+**Contexte :** [what was being built]
+**Décision :** [what was decided]
+**Raison :** [why]
+**Alternatives rejetées :** [what was considered and rejected]
+```
+
 ## Step 3 — Write tests first (red)
 
 Before writing any implementation:
@@ -103,7 +113,12 @@ If the `.vibe/` directory exists: run `/vibe:sync` — it will detect changed fi
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
-## Step 8 — Report to user
+## Step 8 — Commit
+
+Stage all modified and created files (exclude `.env`, secrets) and commit:
+- Message format: `feat: [changelog entry text, written for a developer]`
+
+## Step 9 — Report to user
 
 Summarize concisely:
 - What was implemented (1–2 sentences)

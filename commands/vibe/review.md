@@ -54,7 +54,13 @@ For each fix:
 
 Do NOT auto-fix Low findings — report them only.
 
-## Step 6 — Report to user
+## Step 6 — Sync .vibe/ and commit (if fixes were applied)
+
+If any fixes were applied in Step 5:
+1. Run `/vibe:sync` to update affected module documentation
+2. Stage all modified files and commit: `refactor: apply code quality fixes from vibe:review`
+
+## Step 7 — Report to user
 
 Structure the report as follows:
 
