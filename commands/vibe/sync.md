@@ -1,25 +1,33 @@
 ---
-description: Generate or regenerate .vibe/ — living codebase map for Claude context (modules, models, glossary)
-argument-hint: [optional: path to scan — defaults to full source]
+description: Sync .vibe/ — generate on first run, incrementally update on subsequent runs
+argument-hint: [optional: --full to force full regeneration]
 ---
 
-# /vibe:sync — Codebase Map Generator
+# /vibe:sync — Codebase Map Sync
 
-Generate or fully regenerate the `.vibe/` directory — a structured context map that lets Claude understand the codebase quickly in any new session.
+Sync the `.vibe/` directory — a structured context map that lets Claude understand the codebase quickly in any new session.
 
-Run this when starting the project for the first time, or after significant growth.
+- **First run** (`.vibe/` absent): full generation
+- **Subsequent runs**: incremental — only modules whose source files changed since the last sync are updated
+- **`--full`** in `$ARGUMENTS`: force full regeneration regardless
 
 ## Step 1 — Read configuration
 
-Read `CLAUDE.md` to identify:
-- Source directories (from the Architecture section)
-- Stack and project type
+Read `CLAUDE.md` to identify source directories and stack.
 
-If `$ARGUMENTS` is provided: scan only that path.
+## Step 2 — Determine scope
 
-## Step 2 — Collect source files
+**If `.vibe/index.md` does not exist** (or `--full` in `$ARGUMENTS`): full mode — collect all source files, skip to Step 4.
 
-Gather all source files from the identified directories. Exclude:
+**Otherwise — incremental mode:**
+1. Read the generation date from `.vibe/index.md` (first line: `> Généré par /vibe:sync le YYYY-MM-DD`)
+2. Run `git log --since="YYYY-MM-DD" --name-only --pretty=format: -- <source_dirs>` to list files changed since last sync
+3. If no files changed: report "already up to date" and stop
+4. Identify which functional zones are affected by the changed files → only those zones will be updated
+
+## Step 3 — Collect source files
+
+Gather source files for the zones to update. Exclude:
 - Tests (`*.test.*`, `*.spec.*`, `test_*.py`, `tests/`, `__tests__/`)
 - Dependencies (`node_modules/`, `vendor/`, `.venv/`)
 - Build output (`dist/`, `build/`, `out/`, `target/`)
@@ -27,12 +35,12 @@ Gather all source files from the identified directories. Exclude:
 - Configuration files (`*.config.*`, `*.json` unless it contains logic)
 - Migration files
 
-## Step 3 — Group by functional area
+## Step 4 — Group by functional area
 
 Infer functional zones from the directory structure (e.g. `src/auth/`, `src/api/`, `src/domain/`).
 If the project is flat, group by file type or responsibility.
 
-## Step 4 — Write `.vibe/modules/[name].md`
+## Step 5 — Write `.vibe/modules/[name].md`
 
 For each functional zone, create one file:
 
@@ -44,7 +52,9 @@ For each functional zone, create one file:
 **Dépend de :** `modules/db.md`, `modules/config.md`
 ```
 
-## Step 5 — Write `.vibe/models.md`
+## Step 6 — Write `.vibe/models.md`
+
+In incremental mode: only update entries whose source files are in the changed set.
 
 Collect all key types, interfaces, schemas, and data structures across the codebase.
 
@@ -59,7 +69,7 @@ Collect all key types, interfaces, schemas, and data structures across the codeb
 Défini dans : `src/types/user.ts`
 ```
 
-## Step 6 — Write `.vibe/glossary.md`
+## Step 7 — Write `.vibe/glossary.md`
 
 Detect domain term candidates from: class names, type names, interface names, and domain-specific vocabulary in the code.
 
@@ -76,7 +86,7 @@ New terms are added with a minimal entry — definitions are to be refined by th
 **À ne pas confondre avec :** [similar but distinct term, if applicable]
 ```
 
-## Step 7 — Write `.vibe/index.md`
+## Step 8 — Write `.vibe/index.md`
 
 ```markdown
 # [PROJECT_NAME] — Codebase index
@@ -91,9 +101,10 @@ New terms are added with a minimal entry — definitions are to be refined by th
 [Patterns and conventions actually found in the code — not those declared in CLAUDE.md]
 ```
 
-## Step 8 — Report
+## Step 9 — Report
 
-- N modules documented
-- N data models found
+- Mode used: full or incremental
+- N modules updated (out of N total)
+- N data models updated
 - N terms in glossary (N new, N preserved)
 - Do NOT print file contents unless asked
