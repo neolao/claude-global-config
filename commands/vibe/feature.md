@@ -56,7 +56,20 @@ Once the plan is approved: if it includes a non-obvious design decision (a choic
 **Alternatives rejetées :** [what was considered and rejected]
 ```
 
+## Step 2b — Task decomposition (complex features only)
+
+**A feature is complex if the approved plan contains 2 or more distinct sub-tasks** that can be implemented and tested independently (e.g. "add the data model", "expose the API endpoint", "handle edge case X").
+
+If the feature is complex:
+- Create one task per sub-task using the TaskCreate tool
+- Task title: short imperative describing the sub-task (e.g. "Add User model", "Expose POST /users endpoint")
+- Steps 3–5 below must be executed once per task, in order, before moving to the next
+
+If the feature is simple (single coherent unit of work): skip this step and proceed directly to Step 3.
+
 ## Step 3 — Write tests first (red)
+
+_If tasks were created in Step 2b: pick the first pending task with TaskList, mark it `in_progress` with TaskUpdate, then execute Steps 3–5 for that task before moving to the next._
 
 Before writing any implementation:
 
@@ -92,6 +105,8 @@ With all tests green:
 - Remove debug artifacts (console.log, print, dbg!, etc.)
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green after lint fixes
+
+_If tasks were created in Step 2b: mark the current task `completed` with TaskUpdate, then return to Step 3 for the next pending task. Continue until all tasks are completed._
 
 ## Step 6 — Update CHANGELOG.md
 
