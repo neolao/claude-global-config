@@ -10,9 +10,10 @@
     "frontend-design@claude-plugins-official": true
   },
   "language": "French",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
-  "effortLevel": "high"
+  "agentPushNotifEnabled": true
 }
