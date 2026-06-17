@@ -176,7 +176,8 @@ Agents active for `/vibe:review` on this project:
 
 1. Run the lint command (from manifest) — auto-fix style across the codebase
 2. Run the test command (from manifest) — confirm all tests pass
-3. Report to the user (concise, no full CLAUDE.md dump unless asked):
+3. Run `/vibe:sync` — generate `.vibe/` from the current codebase
+4. Report to the user (concise, no full CLAUDE.md dump unless asked):
    - Detected stack and project type
    - What was installed or configured (if anything)
    - Lint status + test status
