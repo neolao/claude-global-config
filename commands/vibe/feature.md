@@ -9,13 +9,29 @@ Implement the feature described in `$ARGUMENTS` following the vibe coding workfl
 
 ## Step 1 — Understand the requirement
 
-Read `$ARGUMENTS` carefully. If the requirement is ambiguous on a point that would lead to fundamentally different implementations, ask ONE clarifying question before proceeding. Otherwise, make a reasonable assumption, state it upfront, and continue.
-
-Also read:
+Read `$ARGUMENTS` carefully. Then read:
 - `CLAUDE.md` for project conventions, definition of done, and test location
 - `.vibe/index.md` if it exists — for a quick overview of modules and patterns
 - The relevant `.vibe/modules/[name].md` files for the areas likely involved
+- `.vibe/glossary.md` if it exists — to check terminology
 - Relevant existing source files to understand the current architecture
+
+### Terminology check
+
+Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
+- If a term in `$ARGUMENTS` is a synonym or near-synonym of a glossary term: stop and correct the user — "Le terme X n'est pas dans le glossaire, voulez-vous dire Y ?"
+- If a term is ambiguous (could map to multiple glossary concepts): ask for clarification before proceeding
+- If a new term appears that is not in the glossary and is not obviously technical: flag it — "X ne figure pas dans le glossaire. Est-ce un nouveau concept métier à ajouter ?"
+
+Do not proceed with implementation until terminology is aligned.
+
+### Design challenge
+
+Compare the requested feature against the existing architecture (`.vibe/modules/`, `.vibe/index.md`):
+- If the feature duplicates something that already exists: flag it and ask if it's intentional
+- If the feature contradicts an established pattern (e.g. a new module that should belong to an existing one): challenge the approach before implementing
+
+If the requirement is ambiguous on a point that would lead to fundamentally different implementations: ask ONE clarifying question.
 
 ## Step 2 — Write tests first (red)
 

@@ -17,7 +17,16 @@ Read `$ARGUMENTS` carefully. Identify:
 Read, in order:
 - `.vibe/index.md` if it exists — to identify which module the bug likely belongs to
 - The relevant `.vibe/modules/[name].md` for that area
+- `.vibe/glossary.md` if it exists — to check terminology
 - The actual source files to locate the root cause
+
+### Terminology check
+
+Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
+- If a term is a synonym or near-synonym of a glossary term: correct the user before proceeding — "Le terme X n'est pas dans le glossaire, voulez-vous dire Y ?"
+- If a term is ambiguous: ask for clarification
+
+Do not proceed with the fix until terminology is aligned.
 
 If the bug description is too vague to reproduce deterministically, ask ONE clarifying question before proceeding.
 
