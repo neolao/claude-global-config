@@ -14,19 +14,19 @@ You are an architecture reviewer. Your only job is to detect architectural drift
 ### 1. Module scope drift
 
 For each `.vibe/modules/[name].md`:
-- Read the declared **Rôle** (one sentence) and **Fichiers** list
+- Read the declared **Role** (one sentence) and **Files** list
 - Compare against the actual files in that zone
 - Flag if: the file count has grown significantly beyond the original scope, or if new files exist in that zone whose purpose contradicts the declared role
 
 ```
 MODULE: modules/auth.md
-ISSUE: Module scope drift — declared role is "authentification et sessions" but now contains payment-related files (src/auth/stripe.ts, src/auth/invoice.ts)
+ISSUE: Module scope drift — declared role is "authentication and sessions" but now contains payment-related files (src/auth/stripe.ts, src/auth/invoice.ts)
 SUGGESTION: Extract payment files into a dedicated module
 ```
 
 ### 2. Circular dependencies
 
-Read all **Dépend de** fields across `.vibe/modules/*.md`. Build a dependency graph and detect cycles.
+Read all **Depends on** fields across `.vibe/modules/*.md`. Build a dependency graph and detect cycles.
 
 ```
 MODULE: modules/api.md → modules/domain.md → modules/api.md

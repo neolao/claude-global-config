@@ -19,9 +19,9 @@ Read `$ARGUMENTS` carefully. Then read:
 ### Terminology check
 
 Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
-- If a term in `$ARGUMENTS` is a synonym or near-synonym of a glossary term: stop and correct the user — "Le terme X n'est pas dans le glossaire, voulez-vous dire Y ?"
+- If a term in `$ARGUMENTS` is a synonym or near-synonym of a glossary term: stop and correct the user — "The term X is not in the glossary, did you mean Y?"
 - If a term is ambiguous (could map to multiple glossary concepts): ask for clarification before proceeding
-- If a new term appears that is not in the glossary and is not obviously technical: flag it — "X ne figure pas dans le glossaire. Est-ce un nouveau concept métier à ajouter ?"
+- If a new term appears that is not in the glossary and is not obviously technical: flag it — "X is not in the glossary. Is this a new business concept to add?"
 
 Do not proceed with implementation until terminology is aligned.
 
@@ -50,15 +50,15 @@ Once the plan is approved: if it includes a non-obvious design decision (a choic
 
 ```markdown
 ## [YYYY-MM-DD] [Short title]
-**Contexte :** [what was being built]
-**Décision :** [what was decided]
-**Raison :** [why]
-**Alternatives rejetées :** [what was considered and rejected]
+**Context:** [what was being built]
+**Decision:** [what was decided]
+**Reason:** [why]
+**Rejected alternatives:** [what was considered and rejected]
 ```
 
 ## Step 2b — Create task list
 
-Once the plan is approved, create the full task list using TaskCreate before writing any code.
+Once the plan is approved, create the full task list using TaskCreate before writing any code. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
 
 **For each development sub-task** identified in the plan, create 3 tasks in this order using `addBlockedBy` to chain them:
 

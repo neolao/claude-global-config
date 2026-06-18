@@ -15,5 +15,9 @@
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "statusLine": {
+    "type": "command",
+    "command": "sh /home/neolao/.claude/statusline-command.sh"
+  }
 }

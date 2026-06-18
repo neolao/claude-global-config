@@ -23,7 +23,7 @@ Read, in order:
 ### Terminology check
 
 Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
-- If a term is a synonym or near-synonym of a glossary term: correct the user before proceeding — "Le terme X n'est pas dans le glossaire, voulez-vous dire Y ?"
+- If a term is a synonym or near-synonym of a glossary term: correct the user before proceeding — "The term X is not in the glossary, did you mean Y?"
 - If a term is ambiguous: ask for clarification
 
 Do not proceed with the fix until terminology is aligned.
@@ -42,7 +42,26 @@ The plan must include:
 
 Do not write a single line of code until the user approves the plan. If the user requests changes, update and re-present.
 
+## Step 2b — Create task list
+
+Once the plan is approved, create the full task list using TaskCreate before writing any code. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+
+Create these tasks in order, chaining them with `addBlockedBy`:
+
+```
+[Fix] Write failing test   ← no dependency
+[Fix] Implement            ← blockedBy "[Fix] Write failing test"
+[Fix] Refactor + lint      ← blockedBy "[Fix] Implement"
+Update CHANGELOG.md        ← blockedBy "[Fix] Refactor + lint"
+Sync .vibe/                ← blockedBy "Update CHANGELOG.md"
+Commit                     ← blockedBy "Sync .vibe/"
+```
+
+All tasks are created upfront. Do not start coding until the full list is created.
+
 ## Step 3 — Reproduce in a test first (red)
+
+Mark the `[Fix] Write failing test` task `in_progress` with TaskUpdate.
 
 Before touching any implementation:
 
@@ -56,6 +75,8 @@ Before touching any implementation:
 Test name must describe the bug scenario:
 - ✅ `"does not crash when input list is empty"`
 - ❌ `"bug fix test"`
+
+Mark the task `completed`, then mark the `[Fix] Implement` task `in_progress`.
 
 ## Step 4 — Fix the bug (green)
 
@@ -71,6 +92,8 @@ If tests fail after the fix:
 - Re-run the full test suite
 - Repeat up to 3 times before escalating to the user with a precise diagnosis
 
+Mark the task `completed`, then mark the `[Fix] Refactor + lint` task `in_progress`.
+
 ## Step 5 — Clean up
 
 With all tests green:
@@ -78,7 +101,11 @@ With all tests green:
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green
 
+Mark the task `completed`.
+
 ## Step 6 — Update CHANGELOG.md
+
+Mark the `Update CHANGELOG.md` task `in_progress`.
 
 Add an entry under `## [Unreleased]` > `### Fixed`:
 
@@ -92,16 +119,26 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Fixed` does not exist under [Unreleased], add it
 
+Mark the task `completed`.
+
 ## Step 7 — Sync .vibe/
+
+Mark the `Sync .vibe/` task `in_progress`.
 
 If the `.vibe/` directory exists: **invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — it will detect changed files via git and update only the affected modules.
 
 If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
 
+Mark the task `completed`.
+
 ## Step 8 — Commit
+
+Mark the `Commit` task `in_progress`.
 
 Stage all modified and created files (exclude `.env`, secrets) and commit:
 - Message format: `fix: [changelog entry text, written for a developer]`
+
+Mark the task `completed`.
 
 ## Step 9 — Report to user
 

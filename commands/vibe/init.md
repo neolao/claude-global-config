@@ -35,6 +35,25 @@ Also collect:
 - CI config files (`.github/workflows/`, etc.)
 - `$ARGUMENTS` if provided — treat as additional project description
 
+## Step 1b — Create task list
+
+Based on what was found in Step 1, create tasks using TaskCreate. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+
+If missing tooling was detected:
+
+```
+Install missing tooling          ← no dependency
+Write CLAUDE.md                  ← blockedBy "Install missing tooling"
+Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
+```
+
+If no missing tooling:
+
+```
+Write CLAUDE.md                  ← no dependency
+Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
+```
+
 ## Step 2 — Identify gaps
 
 From the table above, flag any missing test framework or style tooling → install in Step 3.
@@ -46,6 +65,8 @@ Determine review agents to activate in CLAUDE.md:
 - `review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
 
 ## Step 3 — Install missing tooling
+
+Mark the `Install missing tooling` task `in_progress` (skip if the task was not created).
 
 Only install what is missing. Prefer the canonical, modern tool for each stack:
 
@@ -65,10 +86,16 @@ After any install:
 2. Run the lint command once to auto-fix any existing style issues
 3. Confirm both commands exit with code 0 before continuing
 
+Mark the task `completed`.
+
 ## Step 4 — Write CLAUDE.md
+
+Mark the `Write CLAUDE.md` task `in_progress`.
 
 Create or fully overwrite `CLAUDE.md` at the project root.
 Populate every placeholder with values inferred from the actual project — no generic examples left behind.
+
+Mark the task `completed`.
 
 ---
 
@@ -174,9 +201,14 @@ Agents active for `/vibe:review` on this project:
 
 ## Step 5 — Final confirmation
 
+Mark the `Run lint, tests, and vibe:sync` task `in_progress`.
+
 1. Run the lint command (from manifest) — auto-fix style across the codebase
 2. Run the test command (from manifest) — confirm all tests pass
 3. **Invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — this generates the `.vibe/` directory with module map, data models, and glossary. Do NOT skip this step; the `.vibe/` folder must exist when `/vibe:init` completes.
+
+Mark the task `completed`.
+
 4. Report to the user (concise, no full CLAUDE.md dump unless asked):
    - Detected stack and project type
    - What was installed or configured (if anything)
