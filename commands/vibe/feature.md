@@ -56,20 +56,43 @@ Once the plan is approved: if it includes a non-obvious design decision (a choic
 **Alternatives rejetées :** [what was considered and rejected]
 ```
 
-## Step 2b — Task decomposition (complex features only)
+## Step 2b — Create task list
 
-**A feature is complex if the approved plan contains 2 or more distinct sub-tasks** that can be implemented and tested independently (e.g. "add the data model", "expose the API endpoint", "handle edge case X").
+Once the plan is approved, create the full task list using TaskCreate before writing any code.
 
-If the feature is complex:
-- Create one task per sub-task using the TaskCreate tool
-- Task title: short imperative describing the sub-task (e.g. "Add User model", "Expose POST /users endpoint")
-- Steps 3–5 below must be executed once per task, in order, before moving to the next
+**For each development sub-task** identified in the plan, create 3 tasks in this order using `addBlockedBy` to chain them:
 
-If the feature is simple (single coherent unit of work): skip this step and proceed directly to Step 3.
+```
+[SubTask A] Write tests      ← no dependency (or blockedBy last task of previous sub-task)
+[SubTask A] Implement        ← blockedBy "[SubTask A] Write tests"
+[SubTask A] Refactor + lint  ← blockedBy "[SubTask A] Implement"
+[SubTask B] Write tests      ← blockedBy "[SubTask A] Refactor + lint"
+[SubTask B] Implement        ← blockedBy "[SubTask B] Write tests"
+[SubTask B] Refactor + lint  ← blockedBy "[SubTask B] Implement"
+...
+```
+
+For a **simple feature** (single coherent unit of work), use `Feature` as the sub-task label:
+
+```
+[Feature] Write tests
+[Feature] Implement        ← blockedBy "[Feature] Write tests"
+[Feature] Refactor + lint  ← blockedBy "[Feature] Implement"
+```
+
+Then append 3 final tasks, blocked by the last refactor task:
+
+```
+Update CHANGELOG.md   ← blockedBy last "[...] Refactor + lint"
+Sync .vibe/           ← blockedBy "Update CHANGELOG.md"
+Commit                ← blockedBy "Sync .vibe/"
+```
+
+All tasks are created upfront. Do not start coding until the full list is created.
 
 ## Step 3 — Write tests first (red)
 
-_If tasks were created in Step 2b: pick the first pending task with TaskList, mark it `in_progress` with TaskUpdate, then execute Steps 3–5 for that task before moving to the next._
+Pick the first pending "Write tests" task with TaskList and mark it `in_progress` with TaskUpdate.
 
 Before writing any implementation:
 
@@ -83,6 +106,8 @@ Before writing any implementation:
 Test names must describe behavior, not implementation:
 - ✅ `"returns 404 when user does not exist"`
 - ❌ `"test getUserById error case"`
+
+Mark the task `completed`, then mark the corresponding "Implement" task `in_progress`.
 
 ## Step 4 — Implement (green)
 
@@ -98,6 +123,8 @@ If tests fail:
 - Re-run
 - Repeat up to 3 times before escalating to the user with a precise diagnosis
 
+Mark the task `completed`, then mark the corresponding "Refactor + lint" task `in_progress`.
+
 ## Step 5 — Refactor (clean)
 
 With all tests green:
@@ -106,9 +133,11 @@ With all tests green:
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green after lint fixes
 
-_If tasks were created in Step 2b: mark the current task `completed` with TaskUpdate, then return to Step 3 for the next pending task. Continue until all tasks are completed._
+Mark the task `completed`. If there are more pending "Write tests" tasks, return to Step 3 for the next sub-task. Otherwise proceed to Step 6.
 
 ## Step 6 — Update CHANGELOG.md
+
+Mark the "Update CHANGELOG.md" task `in_progress`.
 
 Add an entry under `## [Unreleased]` > `### Added`:
 
@@ -122,16 +151,26 @@ Rules:
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Added` does not exist under [Unreleased], add it
 
+Mark the task `completed`.
+
 ## Step 7 — Sync .vibe/
+
+Mark the "Sync .vibe/" task `in_progress`.
 
 If the `.vibe/` directory exists: **invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — it will detect changed files via git and update only the affected modules.
 
-If `.vibe/` does not exist: skip — the user can run `/vibe:sync` to generate it.
+If `.vibe/` does not exist: skip.
+
+Mark the task `completed`.
 
 ## Step 8 — Commit
 
+Mark the "Commit" task `in_progress`.
+
 Stage all modified and created files (exclude `.env`, secrets) and commit:
 - Message format: `feat: [changelog entry text, written for a developer]`
+
+Mark the task `completed`.
 
 ## Step 9 — Report to user
 
