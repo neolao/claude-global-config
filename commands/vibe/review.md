@@ -12,15 +12,15 @@ Run a structured code quality review by invoking the specialized agents declared
 Read `CLAUDE.md` and find the `## Review agents` section.
 It lists which agents are active for this project and their scope.
 
-If the section is absent: run `review-coverage`, `review-naming`, `review-complexity`; add `review-solid` only if the codebase contains classes or interfaces; add `review-architecture` only if `.vibe/` exists; skip `review-ddd` (explicit opt-in required).
+If the section is absent: run `review-tests`, `review-naming`, `review-complexity`; add `review-solid` only if the codebase contains classes or interfaces; add `review-architecture` only if `.vibe/` exists; skip `review-ddd` (explicit opt-in required).
 
 ## Step 1b — Create task list
 
 Based on the active agents determined in Step 1, create tasks using TaskCreate. Always include the three mandatory agents. Add optional agents only if active. Chain each blocked by the previous. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
 
 ```
-Run review-coverage           ← no dependency
-Run review-naming             ← blockedBy "Run review-coverage"
+Run review-tests              ← no dependency
+Run review-naming             ← blockedBy "Run review-tests"
 Run review-complexity         ← blockedBy "Run review-naming"
 [Run review-solid]            ← blockedBy "Run review-complexity" (if active)
 [Run review-ddd]              ← blockedBy previous (if active)
@@ -41,7 +41,7 @@ Exclude: `node_modules/`, `vendor/`, `.venv/`, `dist/`, `build/`, `out/`, `targe
 
 For each active agent, mark its task `in_progress`, invoke the agent, then mark it `completed` before moving to the next:
 
-1. `Run review-coverage` — identifies gaps before reviewing the code itself
+1. `Run review-tests` — test relevance and quality: invoke the `review-tests` skill using the Skill tool (`skill: "review-tests"`). The skill runs as a forked subagent (Explore agent). Core principle: **tests must verify observable behaviour, not implementation details** — a test that breaks on refactoring without any behaviour change is a false test. Collect all findings (coverage gaps, relevance issues, quality issues).
 2. `Run review-naming` — naming issues
 3. `Run review-complexity` — complexity hotspots
 4. `Run review-solid` — SOLID violations (if active)
