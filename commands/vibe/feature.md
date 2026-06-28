@@ -9,6 +9,34 @@ Implement the feature described in `$ARGUMENTS` following the vibe coding workfl
 
 ## Step 1 — Understand the requirement
 
+### Backlog resolution
+
+Before treating `$ARGUMENTS` as a free-form description, check whether it is a reference to a backlog item.
+
+A backlog reference matches one of these patterns (the **entire** `$ARGUMENTS` must match — not just a prefix):
+- A pure number: `3`, `003`, `42`
+- A number followed by an optional slug: `003-oauth`, `3-oauth-integration`
+
+Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
+
+**If `$ARGUMENTS` is a backlog reference:**
+
+1. Extract the numeric part and normalize it to 3 digits with zero-padding (e.g. `3` → `003`).
+2. Search `.vibe/backlog/` for a file whose name starts with that 3-digit prefix: `003-*.md`.
+   - If the directory does not exist or no matching file is found: stop and report "No backlog item `NNN` found in `.vibe/backlog/`. Run `/vibe:backlog` to list existing items."
+3. Read the file:
+   - Extract the title (first `# ` heading).
+   - Extract the full `## Description` section.
+   - Extract the `## Acceptance Criteria` section.
+4. Update the frontmatter in the file: replace `status: todo` with `status: in_progress`.
+5. Store the resolved backlog file path (e.g. `.vibe/backlog/003-oauth.md`) — it will be needed at Step 8.
+
+Use the extracted title + description + acceptance criteria as the feature brief for all subsequent steps, in place of the raw `$ARGUMENTS` string.
+
+**If `$ARGUMENTS` does not match a backlog reference:** proceed normally — treat `$ARGUMENTS` as the free-form feature description.
+
+---
+
 Read `$ARGUMENTS` carefully. Then read:
 - `CLAUDE.md` for project conventions, definition of done, and test location
 - `.vibe/index.md` if it exists — for a quick overview of modules and patterns
@@ -86,6 +114,12 @@ Then append 3 final tasks, blocked by the last refactor task:
 Update CHANGELOG.md   ← blockedBy last "[...] Refactor + lint"
 Sync .vibe/           ← blockedBy "Update CHANGELOG.md"
 Commit                ← blockedBy "Sync .vibe/"
+```
+
+If the feature was loaded from a backlog file (detected in Step 1), append one additional task, blocked by "Commit":
+
+```
+Update backlog status  ← blockedBy "Commit"
 ```
 
 All tasks are created upfront. Do not start coding until the full list is created.
@@ -171,6 +205,13 @@ Stage all modified and created files (exclude `.env`, secrets) and commit:
 - Message format: `feat: [changelog entry text, written for a developer]`
 
 Mark the task `completed`.
+
+If the feature was loaded from a backlog file:
+- Mark the "Update backlog status" task `in_progress`.
+- Open the stored backlog file (`.vibe/backlog/NNN-slug.md`).
+- Replace `status: in_progress` with `status: done` in the frontmatter.
+- Stage the backlog file and create a second commit: `chore: close backlog item NNN`
+- Mark the "Update backlog status" task `completed`.
 
 ## Step 9 — Report to user
 
