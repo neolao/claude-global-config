@@ -28,8 +28,12 @@ Detection rule: `$ARGUMENTS` matches `^\d+(-[\w-]+)?$`.
    - Extract the title (first `# ` heading).
    - Extract the full `## Description` section.
    - Extract the `## Acceptance Criteria` section.
-4. Update the frontmatter in the file: replace `status: todo` with `status: in_progress`.
-5. Store the resolved backlog file path (e.g. `.vibe/backlog/003-oauth.md`) — it will be needed at Step 8.
+   - Extract the optional `depends_on` list from the frontmatter.
+4. **Dependency check:** if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`.
+   - If ALL dependencies have `status: done`: continue normally.
+   - If ANY dependency is NOT done: display a warning listing each blocking item (number, title, status). Then ask the user: "Certaines dépendances ne sont pas encore terminées. Voulez-vous continuer quand même ?" — do not proceed until the user explicitly confirms.
+5. Update the frontmatter in the file: replace `status: todo` with `status: in_progress`.
+6. Store the resolved backlog file path (e.g. `.vibe/backlog/003-oauth.md`) — it will be needed at Step 8.
 
 Use the extracted title + description + acceptance criteria as the feature brief for all subsequent steps, in place of the raw `$ARGUMENTS` string.
 

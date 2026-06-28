@@ -22,14 +22,18 @@ If `$ARGUMENTS` is non-empty: go to **Step 3 — Compute next number**.
    - If not: report "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
 2. Collect all `*.md` files directly in `.vibe/backlog/` (exclude the `done/` subfolder), sorted alphabetically.
 3. For each file:
-   - Read the YAML frontmatter and extract the `status` value.
+   - Read the YAML frontmatter and extract the `status` value and optional `depends_on` list.
    - Read the first `# ` heading as the title.
-4. Display a table:
+   - Compute blocked status: if `depends_on` is non-empty, for each dependency number find the file `NNN-*.md` in `.vibe/backlog/` (top level or `done/`) and read its `status`. Collect the numbers whose status is NOT `done` — these are the current blockers.
+4. Display a table with a "Bloqué par" column:
+   - If no unmet dependencies: show `—`
+   - If there are blockers: show the blocker numbers (e.g. `⚠ 002, 003`)
 
-| # | Title | Status |
-|---|---|---|
-| 002 | Export as CSV | `todo` |
-| 003 | Dark mode | `in_progress` |
+| # | Title | Status | Bloqué par |
+|---|---|---|---|
+| 002 | Export as CSV | `todo` | — |
+| 003 | Dark mode | `in_progress` | ⚠ 002 |
+| 004 | Light theme | `todo` | — |
 
 If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
 
@@ -57,6 +61,15 @@ From `$ARGUMENTS`, derive 2–4 acceptance criteria:
 - Write from the user's or system's perspective: "User can…", "System returns…", "Page displays…".
 - Avoid vague criteria such as "works correctly" or "is fast" — make them falsifiable.
 
+## Step 5b — Detect dependencies
+
+Check whether `$ARGUMENTS` explicitly or implicitly references another existing backlog item as a prerequisite:
+- If `$ARGUMENTS` mentions an item by number (e.g. "after 003", "depends on item 5") or by a title matching an existing backlog file: include those item numbers in `depends_on`.
+- List all `.vibe/backlog/*.md` files and check if any is clearly a prerequisite based on the description.
+- If uncertain: do not add any dependency (leave `depends_on` absent).
+
+If dependencies are found: store them as 3-digit zero-padded numbers (e.g. `[003, 005]`).
+
 ## Step 6 — Write the backlog file
 
 Create `.vibe/backlog/NNN-slug.md` with this exact structure:
@@ -64,6 +77,7 @@ Create `.vibe/backlog/NNN-slug.md` with this exact structure:
 ```markdown
 ---
 status: todo
+depends_on: [003, 005]   # include only if dependencies were found in Step 5b; omit this line entirely if none
 ---
 # [Title]
 
