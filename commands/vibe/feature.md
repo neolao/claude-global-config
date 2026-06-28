@@ -208,9 +208,10 @@ Mark the task `completed`.
 
 If the feature was loaded from a backlog file:
 - Mark the "Update backlog status" task `in_progress`.
-- Open the stored backlog file (`.vibe/backlog/NNN-slug.md`).
-- Replace `status: in_progress` with `status: done` in the frontmatter.
-- Stage the backlog file and create a second commit: `chore: close backlog item NNN`
+- Create `.vibe/backlog/done/` if it does not exist.
+- Move the backlog file: `git mv .vibe/backlog/NNN-slug.md .vibe/backlog/done/NNN-slug.md`
+- In the moved file, replace `status: in_progress` with `status: done` in the frontmatter.
+- Stage all changes and create a second commit: `chore: close backlog item NNN`
 - Mark the "Update backlog status" task `completed`.
 
 ## Step 9 — Report to user

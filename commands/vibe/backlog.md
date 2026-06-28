@@ -18,9 +18,9 @@ If `$ARGUMENTS` is non-empty: go to **Step 3 — Compute next number**.
 
 ## Step 2 — List backlog items
 
-1. Check if `.vibe/backlog/` exists and contains at least one `*.md` file.
-   - If not: report "The backlog is empty — no items in `.vibe/backlog/`." and stop.
-2. Collect all `*.md` files in `.vibe/backlog/`, sorted alphabetically (the `NNN-` prefix guarantees numerical order).
+1. Check if `.vibe/backlog/` exists and contains at least one `*.md` file at the top level (not in `done/`).
+   - If not: report "The backlog is empty — no active items in `.vibe/backlog/`." and stop.
+2. Collect all `*.md` files directly in `.vibe/backlog/` (exclude the `done/` subfolder), sorted alphabetically.
 3. For each file:
    - Read the YAML frontmatter and extract the `status` value.
    - Read the first `# ` heading as the title.
@@ -28,9 +28,10 @@ If `$ARGUMENTS` is non-empty: go to **Step 3 — Compute next number**.
 
 | # | Title | Status |
 |---|---|---|
-| 001 | User Authentication | `todo` |
-| 002 | Export as CSV | `in_progress` |
-| 003 | Dark mode | `done` |
+| 002 | Export as CSV | `todo` |
+| 003 | Dark mode | `in_progress` |
+
+If `.vibe/backlog/done/` contains files, append a note: "N item(s) done — see `.vibe/backlog/done/`."
 
 Stop here — do not create anything.
 
