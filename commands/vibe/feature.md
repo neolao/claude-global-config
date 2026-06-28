@@ -65,6 +65,19 @@ Compare the requested feature against the existing architecture (`.vibe/modules/
 
 If the requirement is ambiguous on a point that would lead to fundamentally different implementations: ask ONE clarifying question.
 
+## Step 1b — Baseline check
+
+Before planning anything, establish the current state of the project.
+
+1. Run the test suite (from manifest): record how many tests pass and how many fail.
+   - If tests fail: note the failures as **pre-existing** — do not fix them now, but list them in Step 2 under Assumptions.
+2. If the project has a build step (compiled language, bundler, etc.): run the build command.
+   - If the build fails: this is a blocker — report it to the user before proceeding. Do not plan over a broken build.
+3. If the project has a run/dev command (server, CLI, script): attempt a quick start to verify it doesn't crash immediately.
+   - Run the command, wait 3–5 seconds, then stop it. If it crashes on startup: report the error. If it starts: note that the baseline is healthy.
+
+Record the baseline results — they will be referenced in Step 2 and Step 9.
+
 ## Step 2 — Plan (must be validated before proceeding)
 
 Present the implementation plan to the user and **wait for explicit approval** before writing any code.
@@ -74,7 +87,8 @@ The plan must include:
 - **Modules touched** — which existing files/modules will be modified, and why
 - **New modules** — if any new file or module needs to be created, justify it
 - **Test strategy** — nominal path, edge cases, error paths planned
-- **Assumptions** — any assumption made due to ambiguity in the requirement
+- **Runtime verification** — how the feature will be exercised at runtime after implementation: which command to run, with which arguments, and what output/behavior to expect. If external services or config are required, list what stubs will be created.
+- **Assumptions** — any assumption made due to ambiguity in the requirement; include any pre-existing test failures noted in Step 1b
 
 Do not write a single line of code until the user approves the plan. If the user requests changes to the plan, update it and present it again.
 
@@ -92,15 +106,17 @@ Once the plan is approved: if it includes a non-obvious design decision (a choic
 
 Once the plan is approved, create the full task list using TaskCreate before writing any code. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
 
-**For each development sub-task** identified in the plan, create 3 tasks in this order using `addBlockedBy` to chain them:
+**For each development sub-task** identified in the plan, create 4 tasks in this order using `addBlockedBy` to chain them:
 
 ```
 [SubTask A] Write tests      ← no dependency (or blockedBy last task of previous sub-task)
 [SubTask A] Implement        ← blockedBy "[SubTask A] Write tests"
-[SubTask A] Refactor + lint  ← blockedBy "[SubTask A] Implement"
+[SubTask A] Runtime smoke    ← blockedBy "[SubTask A] Implement"
+[SubTask A] Refactor + lint  ← blockedBy "[SubTask A] Runtime smoke"
 [SubTask B] Write tests      ← blockedBy "[SubTask A] Refactor + lint"
 [SubTask B] Implement        ← blockedBy "[SubTask B] Write tests"
-[SubTask B] Refactor + lint  ← blockedBy "[SubTask B] Implement"
+[SubTask B] Runtime smoke    ← blockedBy "[SubTask B] Implement"
+[SubTask B] Refactor + lint  ← blockedBy "[SubTask B] Runtime smoke"
 ...
 ```
 
@@ -109,7 +125,8 @@ For a **simple feature** (single coherent unit of work), use `Feature` as the su
 ```
 [Feature] Write tests
 [Feature] Implement        ← blockedBy "[Feature] Write tests"
-[Feature] Refactor + lint  ← blockedBy "[Feature] Implement"
+[Feature] Runtime smoke    ← blockedBy "[Feature] Implement"
+[Feature] Refactor + lint  ← blockedBy "[Feature] Runtime smoke"
 ```
 
 Then append 3 final tasks, blocked by the last refactor task:
@@ -161,7 +178,38 @@ If tests fail:
 - Re-run
 - Repeat up to 3 times before escalating to the user with a precise diagnosis
 
-Mark the task `completed`, then mark the corresponding "Refactor + lint" task `in_progress`.
+Mark the task `completed`, then mark the corresponding "Runtime smoke" task `in_progress`.
+
+## Step 4b — Runtime smoke test
+
+Tests are green — now prove the feature actually works at runtime. Do not assume tests = working.
+
+### Determine how to run the feature
+
+From (in order of priority):
+1. The "Runtime verification" plan from Step 2
+2. `CLAUDE.md` — look for run/dev/start scripts
+3. The project manifest (package.json scripts, Makefile targets, Cargo.toml, pyproject.toml, etc.)
+4. Project files: `docker-compose.yml`, `Dockerfile`, a `main.*` entry point, a CLI binary
+
+Derive realistic inputs from the acceptance criteria.
+
+### Execute
+
+Run the feature with realistic inputs.
+
+**If it succeeds:** verify that the output or behavior matches what the acceptance criteria describe. Mark the "Runtime smoke" task `completed`, then mark the "Refactor + lint" task `in_progress`.
+
+**If it fails due to missing configuration** (missing env var, missing config file, missing secret):
+1. Identify exactly what is missing from the error output.
+2. Create a minimal stub — a `.env.test` with placeholder values, or a stub config file — sufficient to allow the feature to start and exercise the happy path.
+3. Re-run with the stub in place.
+
+**Self-correction loop (runtime):**
+- If it still fails: diagnose the error, fix the code (not the stub, unless the stub was wrong), re-run.
+- Repeat up to **3 attempts** total. After 3 failures: stop and escalate to the user with the exact command run, the exact error output, and what was tried.
+
+Do not mark the task `completed` until runtime execution produces the expected behavior.
 
 ## Step 5 — Refactor (clean)
 
@@ -170,6 +218,7 @@ With all tests green:
 - Remove debug artifacts (console.log, print, dbg!, etc.)
 - Run the lint command (from manifest) and fix any issues
 - Re-run tests to confirm still green after lint fixes
+- Re-run the runtime smoke test from Step 4b to confirm the refactor did not break runtime behavior. If the smoke test fails, treat it as a regression: fix before marking the task completed.
 
 Mark the task `completed`. If there are more pending "Write tests" tasks, return to Step 3 for the next sub-task. Otherwise proceed to Step 6.
 
