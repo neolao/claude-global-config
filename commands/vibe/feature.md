@@ -57,6 +57,25 @@ Compare the terms used in `$ARGUMENTS` against `.vibe/glossary.md`:
 
 Do not proceed with implementation until terminology is aligned.
 
+### Duplicate check
+
+Before designing anything, verify the feature does not already exist — even under a different name or phrasing.
+
+Check each of the following sources:
+
+1. **Backlog (all statuses)** — read every `.md` file under `.vibe/backlog/` and `.vibe/backlog/done/` (if they exist). Compare the title and description of each item against the requested feature. Look for semantic overlap, not just identical wording — e.g. "export to CSV" and "download data as spreadsheet" are the same feature.
+
+2. **CHANGELOG.md** — if it exists, scan every bullet under `### Added` across all versions and `[Unreleased]`. Flag any entry that describes the same capability.
+
+3. **Existing modules** — scan `.vibe/modules/` and `.vibe/index.md` for any module or function description that already covers the requested behaviour.
+
+**If a likely duplicate is found in any source:** stop and report it to the user:
+- Quote the matching item (its title, status, and source file or changelog version).
+- Ask: "Cette fonctionnalité semble déjà exister (`<match>`). S'agit-il vraiment d'une nouvelle feature distincte ?"
+- Do not proceed until the user explicitly confirms it is a distinct, new feature.
+
+**If no duplicate is found:** note "No duplicate detected" and continue.
+
 ### Design challenge
 
 Compare the requested feature against the existing architecture (`.vibe/modules/`, `.vibe/index.md`):
