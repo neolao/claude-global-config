@@ -1,5 +1,5 @@
 ---
-description: Manage the feature backlog — list tasks or add a new item
+description: Manage the feature backlog — list tasks or add one or several items
 argument-hint: [feature description to add] | (empty to list all)
 ---
 
@@ -8,13 +8,50 @@ argument-hint: [feature description to add] | (empty to list all)
 Manage the feature backlog stored in `.vibe/backlog/`. Each item is a Markdown file named `NNN-slug.md` with a YAML frontmatter `status` field (`todo`, `in_progress`, or `done`).
 
 - **No argument** → list all backlog items with their current status
-- **With argument** → create a new backlog item from the description
+- **Single-line argument** → create one new backlog item from the description
+- **Multi-item argument** → create multiple backlog items (one per detected item)
 
 ## Step 1 — Detect mode
 
 If `$ARGUMENTS` is empty or blank: go to **Step 2 — List**.
 
-If `$ARGUMENTS` is non-empty: go to **Step 3 — Compute next number**.
+If `$ARGUMENTS` is non-empty:
+- Inspect the structure of `$ARGUMENTS`:
+  - **From-review mode**: the argument expresses the intent to create tasks from a previous review — e.g. "from review", "from last review", "depuis le review", "from vibe:review", "from the review findings", or any close variant. Go to **Step 2c — From-review creation**.
+  - **Batch mode**: the argument contains multiple distinct items — i.e., a newline-separated list, a bulleted list (`-` or `*` prefixes), or a numbered list (`1.`, `2.`, …). Each line/entry represents a separate backlog item to create. Go to **Step 2b — Batch creation**.
+  - **Single mode**: the argument is a plain prose description (possibly multi-sentence but not a list). Go to **Step 3 — Compute next number**.
+
+## Step 2c — From-review creation
+
+Look in the current conversation context for the most recent `/vibe:review` report. It contains sections like "Applied fixes", "Remaining findings" (High / Medium / Low), and "Test status after fixes".
+
+Extract findings to convert into backlog items:
+- **Always include**: all findings listed under "Remaining findings" (High, Medium, and Low) — these are issues the review did not auto-fix.
+- **Skip**: findings listed under "Applied fixes" — they are already resolved.
+- If no `/vibe:review` output is found in the conversation: stop and report "No review output found in the current conversation. Run `/vibe:review` first, or provide a list of items directly."
+
+For each extracted finding, compose a short item description (one line) that captures the issue and its location (file, function) if mentioned.
+
+Then treat this list exactly like a batch argument: go to **Step 2b — Batch creation** with this list.
+
+## Step 2b — Batch creation
+
+Parse `$ARGUMENTS` into an ordered list of item descriptions. Rules:
+- Strip leading list markers (`-`, `*`, `1.`, `2.`, …) from each entry.
+- Discard blank lines.
+- Each non-empty entry is treated as an independent item description (equivalent to calling the skill once per item in single mode).
+
+Before creating any file, display a preview table of all items that will be created:
+
+| # (preview) | Title (preview) |
+|---|---|
+| 001 | First derived title |
+| 002 | Second derived title |
+| … | … |
+
+Then create each item in order by applying **Steps 3 → 6** for each entry, using the description of that entry as the argument. The number assigned at Step 3 must be re-computed after each file is written (so each new file gets the correct next number even if files already existed).
+
+After all items are created, go to **Step 7b — Batch report**.
 
 ## Step 2 — List backlog items
 
@@ -101,3 +138,17 @@ Display:
 - Title: [title]
 - Acceptance criteria: N generated
 - Next steps: run `/vibe:feature NNN` or `/vibe:feature NNN-slug` to implement it
+
+## Step 7b — Batch report
+
+Display a summary table of all items created:
+
+| # | File | Title | Criteria |
+|---|---|---|---|
+| 001 | `.vibe/backlog/001-slug.md` | First Title | 3 |
+| 002 | `.vibe/backlog/002-slug.md` | Second Title | 2 |
+| … | … | … | … |
+
+Then display:
+- Total items created: N
+- Next steps: run `/vibe:feature NNN` for any item to start implementing it, or `/vibe:backlog` to review the full backlog.
