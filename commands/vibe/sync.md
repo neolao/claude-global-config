@@ -71,9 +71,24 @@ Defined in: `src/types/user.ts`
 
 ## Step 7 — Write `.vibe/glossary.md`
 
-Detect domain term candidates from: class names, type names, interface names, and domain-specific vocabulary in the code.
+Detect domain term candidates from: class names, type names, interface names, and domain-specific vocabulary **from the project's own code**.
 
-If `.vibe/glossary.md` already exists: **preserve all existing definitions**, only add newly detected terms.
+**Exclude — these are NOT glossary terms:**
+- External library or third-party API names, methods, or call patterns (e.g. `ts_reader.run()`, `page.route()`, `cheerio.load()`)
+- Browser/DOM API calls used as implementation details
+- Infrastructure or protocol names that belong to a dependency, not the domain (e.g. HTTP verbs, CSS selectors, JSON keys from third-party APIs)
+- Any identifier that does not map to a concept owned and defined by this project
+- **Error/exception class names** — `FooError` is a code artifact; the failure scenario it represents belongs in the definition of the relevant domain concept, not as a standalone entry
+- **Implementation patterns** — technical strategies that describe *how* the code is structured internally (e.g. "buffer-cache pattern", "repository pattern"); these are architecture notes, not domain vocabulary
+- **Internal technical mechanisms** — plumbing details that exist purely to enable an implementation and have no meaning outside the code (e.g. synthetic/fake URLs used as cache keys)
+- **Configuration field names or values** — a YAML key or its allowed values (e.g. `format: chapter | volume`) is a config API detail, not a domain concept with independent meaning
+
+A valid glossary term is a **business concept** the project owns and names — something that defines *what the domain does*, not *how the code achieves it*. Ask: would a domain expert (someone who knows manga publishing but not this codebase) recognize this term as meaningful? If not, it does not belong here.
+
+If `.vibe/glossary.md` already exists:
+1. **Audit existing terms** against the exclusion criteria above. For each term that violates them, flag it as a candidate for removal.
+2. If any candidates are found, **list them to the user** with a one-line reason for each, and ask for confirmation before removing them. Do not remove anything without explicit approval.
+3. **Preserve all approved definitions**, only add newly detected terms.
 
 New terms are added with a minimal entry — definitions are to be refined by the user:
 
