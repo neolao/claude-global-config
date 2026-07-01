@@ -35,19 +35,36 @@ Also collect:
 - CI config files (`.github/workflows/`, etc.)
 - `$ARGUMENTS` if provided — treat as additional project description
 
-## Step 1b — Create task list
+## Step 1b — Handle empty project
 
-Based on what was found in Step 1, create tasks using TaskCreate. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+If Step 1 found **no manifest files at all** (truly empty project — no `package.json`, no `pyproject.toml`, no `Cargo.toml`, etc.):
 
-If missing tooling was detected:
+Use the `AskUserQuestion` tool to collect the following before continuing:
+
+1. **Project idea** — "Quel est le but de ce projet ? Décris brièvement ce que tu veux construire." (open text)
+2. **Tech stack** — offer 4 options based on common choices, or let the user type their own:
+   - Node.js / TypeScript
+   - Python
+   - Rust
+   - Go
+
+Save the answers and treat them as the project description for Step 4. Use the chosen stack to bootstrap a minimal project structure in Step 3 (create the manifest file for that stack so tooling can be installed).
+
+If Step 1 found at least one manifest, skip this step entirely.
+
+## Step 1c — Create task list
+
+Based on what was found in Steps 1 and 1b, create tasks using TaskCreate. **Keep subject names short (≤ 30 chars)** — they appear in the status line.
+
+If the project is empty (Step 1b was triggered) **or** missing tooling was detected:
 
 ```
-Install missing tooling          ← no dependency
-Write CLAUDE.md                  ← blockedBy "Install missing tooling"
+Bootstrap / install tooling      ← no dependency
+Write CLAUDE.md                  ← blockedBy "Bootstrap / install tooling"
 Run lint, tests, and vibe:sync   ← blockedBy "Write CLAUDE.md"
 ```
 
-If no missing tooling:
+If no missing tooling and project already has a manifest:
 
 ```
 Write CLAUDE.md                  ← no dependency
@@ -64,11 +81,22 @@ Determine review agents to activate in CLAUDE.md:
 - `review-solid`: activate if the project uses classes, interfaces, or a modular architecture; skip for scripts or functional code
 - `review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
 
-## Step 3 — Install missing tooling
+## Step 3 — Bootstrap / install tooling
 
-Mark the `Install missing tooling` task `in_progress` (skip if the task was not created).
+Mark the `Bootstrap / install tooling` task `in_progress` (skip if the task was not created).
 
-Only install what is missing. Prefer the canonical, modern tool for each stack:
+**Empty project case (Step 1b was triggered):** create the minimal project scaffold for the chosen stack before installing tooling:
+
+| Stack | Scaffold command |
+|---|---|
+| Node.js / TS | `npm init -y`, add `"type": "module"` to `package.json`, create `src/index.ts` |
+| Python | `uv init` or create `pyproject.toml` + `src/<name>/__init__.py` |
+| Rust | `cargo init` |
+| Go | `go mod init <module-name>` + `main.go` |
+
+Then install the canonical tooling for that stack (test framework + style tool), as described below.
+
+**Existing project case:** only install what is missing. Prefer the canonical, modern tool for each stack:
 
 | Stack | Test framework (if missing) | Style tooling (if missing) |
 |---|---|---|
@@ -107,7 +135,7 @@ Mark the task `completed`.
 
 ## Project overview
 
-[1–3 sentences inferred from manifest description + $ARGUMENTS + directory structure]
+[1–3 sentences inferred from manifest description + $ARGUMENTS + user's answer from Step 1b (if empty project) + directory structure]
 
 **Stack:** [actual detected stack, e.g. Python 3.12 / FastAPI / Pytest / Ruff]
 **Type:** [CLI / REST API / frontend / library / full-stack / other]
