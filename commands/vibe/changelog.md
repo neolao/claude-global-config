@@ -29,6 +29,7 @@ Map each commit message to a change category. Use these heuristics:
 | `security`, `vuln`, `cve`, `auth` | Security |
 
 - Rewrite each commit as a human-readable changelog entry (not a raw commit message)
+- **Deduplicate against existing [Unreleased] entries**: `/vibe:feature` and `/vibe:fix` already write their changelog entry at implementation time, and their commit messages (`feat: ...`, `fix: ...`) reuse that entry text. Before adding a classified commit, compare it with the entries already under `[Unreleased]` — if an existing entry covers the same change (same or near-same wording, same user-facing impact), skip the commit instead of duplicating it.
 - Group entries by category
 - Discard noise: merge commits, version bumps, `chore: lint`, `chore: deps` unless significant
 - If a commit message is ambiguous, use judgment — prefer the user-facing impact

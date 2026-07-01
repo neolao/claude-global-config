@@ -78,9 +78,9 @@ Stop here — do not create anything.
 
 ## Step 3 — Compute the next number
 
-1. If `.vibe/backlog/` does not exist or contains no `.md` files: the next number is `001`.
-2. Otherwise: list all filenames matching `NNN-*.md`, extract the leading numeric prefix from each, find the highest value, increment by 1, and zero-pad to 3 digits.
-   - Example: if the highest existing file is `007-dark-mode.md`, the next number is `008`.
+1. If `.vibe/backlog/` does not exist or contains no `.md` files (**including in `done/`**): the next number is `001`.
+2. Otherwise: list all filenames matching `NNN-*.md` in **both** `.vibe/backlog/` and `.vibe/backlog/done/`, extract the leading numeric prefix from each, find the highest value, increment by 1, and zero-pad to 3 digits. Scanning `done/` is mandatory — otherwise, once every active item is completed and moved, numbering would restart at `001` and collide with done items.
+   - Example: if the highest existing file is `done/007-dark-mode.md`, the next number is `008`.
 
 ## Step 4 — Derive title and slug
 

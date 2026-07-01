@@ -77,9 +77,10 @@ From the table above, flag any missing test framework or style tooling → insta
 
 Determine review agents to activate in CLAUDE.md:
 
-- `review-coverage`, `review-naming`, `review-complexity`: always active
+- `review-tests`, `review-naming`, `review-complexity`: always active
 - `review-solid`: activate if the project uses classes, interfaces, or a modular architecture; skip for scripts or functional code
 - `review-ddd`: activate if an explicit domain layer exists (`domain/`, `entities/`, `aggregates/`, `value-objects/`, or equivalent DDD vocabulary); skip otherwise
+- `review-architecture`: active if `.vibe/` exists (it will after Step 5 runs `/vibe:sync` — mark it active)
 
 ## Step 3 — Bootstrap / install tooling
 
@@ -218,11 +219,12 @@ Agents active for `/vibe:review` on this project:
 
 | Agent | Active | Reason |
 |---|---|---|
-| `review-coverage` | ✅ | always active |
+| `review-tests` | ✅ | always active |
 | `review-naming` | ✅ | always active |
 | `review-complexity` | ✅ | always active |
 | `review-solid` | [✅ / ❌] | [active if OO or modular architecture detected / inactive: functional or scripting style] |
 | `review-ddd` | [✅ / ❌] | [active if domain layer detected / inactive: no explicit domain model] |
+| `review-architecture` | [✅ / ❌] | [active if `.vibe/` exists / inactive: run `/vibe:sync` first] |
 ```
 
 ---
