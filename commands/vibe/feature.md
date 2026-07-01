@@ -101,13 +101,16 @@ Record the baseline results — they will be referenced in Step 2 and Step 9.
 
 Present the implementation plan to the user and **wait for explicit approval** before writing any code.
 
-The plan must include:
-- **Approach** — what will be implemented, in 2–3 sentences
-- **Modules touched** — which existing files/modules will be modified, and why
-- **New modules** — if any new file or module needs to be created, justify it
-- **Test strategy** — nominal path, edge cases, error paths planned
-- **Runtime verification** — how the feature will be exercised at runtime after implementation: which command to run, with which arguments, and what output/behavior to expect. If external services or config are required, list what stubs will be created.
-- **Assumptions** — any assumption made due to ambiguity in the requirement; include any pre-existing test failures noted in Step 1b
+The user is a Product Owner, not a developer: present the plan in plain, non-technical language. **Never mention file names, class/function/method/variable names, module names, or other implementation details.**
+
+The plan must cover, in a few short sentences:
+- **Ce qui va être fait** — what will be built, described functionally
+- **Ce que ça touche** (if relevant) — which existing behavior or area of the app is affected, in plain terms, without naming files or modules
+- **Ce qui va être testé** — the scenarios that will be verified, phrased as user actions and expected results (the normal case, a couple of edge cases, and what happens when something goes wrong)
+- **Comment on va vérifier que ça marche vraiment** — a plain description of how the feature will be exercised for real once built (e.g. "on va lancer l'appli et essayer d'exporter un rapport")
+- **Hypothèses** — any assumption made because the request was ambiguous, in plain language; mention if pre-existing test failures were found (Step 1b) without technical detail
+
+Keep the technical plan (exact modules/files touched, new files to create, technical test strategy, runtime verification command and arguments) as your own working notes — it guides the implementation but is not part of what you show the user.
 
 Do not write a single line of code until the user approves the plan. If the user requests changes to the plan, update it and present it again.
 
