@@ -46,7 +46,7 @@ Mark ALL `Run review-*` tasks `in_progress`, then launch every active agent **in
 - `Run review-complexity` — complexity hotspots
 - `Run review-solid` — SOLID violations (if active)
 - `Run review-ddd` — DDD alignment (if active)
-- `Run review-architecture` — architectural drift: module boundaries, circular deps, layer violations, decisions violated (if active — requires `.vibe/`)
+- `Run review-architecture` — architectural drift: module boundaries, circular deps, layer violations, violations of recorded decisions — ADRs in `.vibe/decisions/` (or legacy `.vibe/decisions.md`) (if active — requires `.vibe/`)
 
 As each agent returns, collect its findings and mark its task `completed`.
 

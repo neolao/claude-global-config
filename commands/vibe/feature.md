@@ -114,15 +114,25 @@ Keep the technical plan (exact modules/files touched, new files to create, techn
 
 Do not write a single line of code until the user approves the plan. If the user requests changes to the plan, update it and present it again.
 
-Once the plan is approved: if it includes a non-obvious design decision (a choice between multiple valid approaches, or a deliberate deviation from existing patterns), record it in `.vibe/decisions.md`:
+Once the plan is approved: if it includes a non-obvious design decision (a choice between multiple valid approaches, or a deliberate deviation from existing patterns), record it as an ADR file `.vibe/decisions/NNN-slug.md`:
+
+- **Number**: same rule as the backlog — scan `.vibe/decisions/*.md` for the highest `NNN` prefix, increment, zero-pad to 3 digits; `001` if the directory is empty or absent (create it).
+- **Slug**: kebab-case of the decision's short title (lowercase, `-` separators, no punctuation).
+- **Content**:
 
 ```markdown
-## [YYYY-MM-DD] [Short title]
+---
+date: YYYY-MM-DD
+status: accepted
+---
+# [Short title]
 **Context:** [what was being built]
 **Decision:** [what was decided]
 **Reason:** [why]
 **Rejected alternatives:** [what was considered and rejected]
 ```
+
+ADR files are append-only: NEVER modify or delete an existing file in `.vibe/decisions/`. If a new decision replaces an old one, create the new file and change the old file's frontmatter to `status: superseded by NNN` — that frontmatter line is the only permitted mutation.
 
 ## Step 2b — Create task list
 
