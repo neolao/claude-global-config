@@ -152,7 +152,8 @@ Mark the task `completed`.
 └── ...
 ```
 
-> Run `/vibe:sync` to generate `.vibe/` — detailed module map, data models, and ubiquitous language glossary for Claude context.
+<!-- The import below loads the compact codebase map into every session. It is maintained by /vibe:sync; details (modules/, models.md, glossary.md) stay on-demand. -->
+@.vibe/index.md
 
 ## Development workflow (Vibe Coding)
 
@@ -235,7 +236,7 @@ Mark the `Run lint, tests, and vibe:sync` task `in_progress`.
 
 1. Run the lint command (from manifest) — auto-fix style across the codebase
 2. Run the test command (from manifest) — confirm all tests pass
-3. **Invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — this generates the `.vibe/` directory with module map, data models, and glossary. Do NOT skip this step; the `.vibe/` folder must exist when `/vibe:init` completes.
+3. **Invoke the `vibe:sync` skill** using the Skill tool (`skill: "vibe:sync"`) — this generates the `.vibe/` directory with module map, data models, and glossary. Do NOT skip this step; the `.vibe/` folder must exist when `/vibe:init` completes — the CLAUDE.md written in Step 4 imports `@.vibe/index.md`, so verify that `.vibe/index.md` now exists.
 
 Mark the task `completed`.
 
@@ -244,3 +245,4 @@ Mark the task `completed`.
    - What was installed or configured (if anything)
    - Lint status + test status
    - One sentence describing what CLAUDE.md now enforces
+   - Mention that `/vibe:docs` is available to generate project documentation (README managed sections + docs/)
