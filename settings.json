@@ -6,6 +6,10 @@
     ]
   },
   "hooks": {},
+  "statusLine": {
+    "type": "command",
+    "command": "sh /home/neolao/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true
   },
@@ -16,8 +20,5 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
   "agentPushNotifEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "sh /home/neolao/.claude/statusline-command.sh"
-  }
+  "model": "claude-fable-5[1m]"
 }
