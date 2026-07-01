@@ -27,7 +27,8 @@ Create the full task list using TaskCreate. **Keep subject names short (≤ 30 c
 ```
 Run pre-release checks    ← no dependency
 Finalize CHANGELOG.md     ← blockedBy "Run pre-release checks"
-Bump version              ← blockedBy "Finalize CHANGELOG.md"
+Refresh docs              ← blockedBy "Finalize CHANGELOG.md"
+Bump version              ← blockedBy "Refresh docs"
 Commit and tag            ← blockedBy "Bump version"
 ```
 
@@ -46,6 +47,16 @@ Mark the task `completed`.
 Mark the `Finalize CHANGELOG.md` task `in_progress`.
 
 **Invoke the `vibe:changelog` skill** using the Skill tool (`skill: "vibe:changelog"`, `args: "[version]"`) — to move [Unreleased] entries into the new version section with today's date.
+
+Mark the task `completed`.
+
+## Step 3b — Refresh docs
+
+Mark the `Refresh docs` task `in_progress`.
+
+**Invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`, `args: "--full"`) — full regeneration so the release ships with up-to-date documentation (notably the README features section now including the new version's entries).
+
+If `README.md` has no `vibe:` managed section markers and no `docs/` directory exists: skip — this project does not use managed documentation.
 
 Mark the task `completed`.
 
@@ -71,7 +82,7 @@ Mark the task `completed`.
 
 Mark the `Commit and tag` task `in_progress`.
 
-1. Stage: `CHANGELOG.md` + manifest file(s)
+1. Stage: `CHANGELOG.md` + manifest file(s) + `README.md` and `docs/` if Step 3b modified them
 2. Commit: `chore: release vX.Y.Z`
 3. Tag: `git tag vX.Y.Z`
 

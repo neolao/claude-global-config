@@ -155,7 +155,8 @@ Then append 3 final tasks, blocked by the last refactor task:
 
 ```
 Update CHANGELOG.md   ← blockedBy last "[...] Refactor + lint"
-Sync .vibe/           ← blockedBy "Update CHANGELOG.md"
+Update docs           ← blockedBy "Update CHANGELOG.md"
+Sync .vibe/           ← blockedBy "Update docs"
 Commit                ← blockedBy "Sync .vibe/"
 ```
 
@@ -259,6 +260,18 @@ Rules:
 - If `CHANGELOG.md` does not exist, create it with the Keep a Changelog header and the entry
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Added` does not exist under [Unreleased], add it
+
+Mark the task `completed`.
+
+## Step 6b — Update docs
+
+Mark the "Update docs" task `in_progress`.
+
+If the feature is visible to the end user AND `README.md` contains `vibe:` managed section markers: **invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`) — it refreshes the impacted managed sections (features, usage) and the applicable `docs/` files. The modified files will be part of the commit in Step 8.
+
+Skip (with a one-line explanation in the report) if:
+- the change is purely internal (no user-visible behavior), or
+- `README.md` has no managed sections — the user can run `/vibe:docs` once to set them up.
 
 Mark the task `completed`.
 

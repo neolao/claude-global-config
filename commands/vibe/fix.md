@@ -72,7 +72,8 @@ Create these tasks in order, chaining them with `addBlockedBy`:
 [Fix] Runtime smoke        ← blockedBy "[Fix] Implement"
 [Fix] Refactor + lint      ← blockedBy "[Fix] Runtime smoke"
 Update CHANGELOG.md        ← blockedBy "[Fix] Refactor + lint"
-Sync .vibe/                ← blockedBy "Update CHANGELOG.md"
+Update docs                ← blockedBy "Update CHANGELOG.md"
+Sync .vibe/                ← blockedBy "Update docs"
 Commit                     ← blockedBy "Sync .vibe/"
 ```
 
@@ -167,6 +168,16 @@ Rules:
 - If `CHANGELOG.md` does not exist, create it with the Keep a Changelog header and the entry
 - If `## [Unreleased]` does not exist, add it at the top below the header
 - If `### Fixed` does not exist under [Unreleased], add it
+
+Mark the task `completed`.
+
+## Step 6b — Update docs
+
+Mark the `Update docs` task `in_progress`.
+
+Most fixes do NOT touch documentation. Only if the fix changes a behavior that is documented — e.g. a command described in the README `usage` section behaved incorrectly — AND `README.md` contains `vibe:` managed section markers: **invoke the `vibe:docs` skill** using the Skill tool (`skill: "vibe:docs"`) to refresh the impacted sections. The modified files will be part of the commit in Step 8.
+
+Otherwise: skip with a one-line explanation in the report.
 
 Mark the task `completed`.
 
